@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>SensorItem.qml</file>
+        <file>TriggerPatternView.qml</file>
+        <file>OutputsView.qml</file>
+        <file>InputsView.qml</file>
+        <file>RpmView.qml</file>
+        <file>SensorsView.qml</file>
+        <file>View.qml</file>
+        <file>DialControl.qml</file>
+        <file>Style.qml</file>
+        <file>qmldir</file>
+        <file>ConnectionView.qml</file>
+        <file>SensorItem2.qml</file>
+        <file>TestForm.ui.qml</file>
+        <file>SensorsView2.qml</file>
+        <file>InputItem.qml</file>
+        <file>InputItem2.qml</file>
+        <file>OutputItem.qml</file>
+        <file>ConfigureButton.qml</file>
+    </qresource>
+</RCC>
