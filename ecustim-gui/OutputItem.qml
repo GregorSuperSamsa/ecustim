@@ -6,9 +6,8 @@ import QtQuick.Layouts 1.3
 
 Item {
     id: root
-    //property int itemWidth: max()
-    implicitHeight: 50
-    implicitWidth: 100
+    implicitHeight: columnLayout.implicitHeight
+    implicitWidth: columnLayout.implicitWidth
 
     ColumnLayout
     {
@@ -30,7 +29,7 @@ Item {
             id: label
             Layout.fillWidth: true
             Layout.preferredHeight: contentHeight
-            Layout.margins: 10
+            Layout.margins: 5
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             fontSizeMode: Text.VerticalFit
