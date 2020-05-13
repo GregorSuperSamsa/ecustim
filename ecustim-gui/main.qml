@@ -23,7 +23,7 @@ ApplicationWindow
         ListElement { title: "Sensors"; index: 1; iconSource: "file:/rpm.png" }
         //ListElement { title: "Inputs"; index: 2; iconSource: "file:/input.png" }
         //ListElement { title: "Outputs"; index: 3; iconSource: "file:/output.png" }
-        ListElement { title: "Communication"; index: 4; iconSource: "file:/uart.png" }
+        ListElement { title: "Communication"; index: 2; iconSource: "file:/uart.png" }
     }
 
     RowLayout
@@ -133,6 +133,16 @@ ApplicationWindow
 
 
             SensorsView2
+            {
+                id: sensorsView2
+                Layout.alignment: Qt.AlignTop
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                //Layout.margins: 10
+
+            }
+
+            SensorsView
             {
                 id: sensorsView
                 Layout.alignment: Qt.AlignTop

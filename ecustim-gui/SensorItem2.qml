@@ -73,7 +73,6 @@ padding: 4
                 id: progress
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-
                 handle:Item{}
                 from: slider.from
                 to: slider.to

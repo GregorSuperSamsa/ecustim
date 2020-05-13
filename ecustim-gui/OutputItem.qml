@@ -6,6 +6,9 @@ import QtQuick.Layouts 1.3
 
 Item {
     id: root
+    //property int itemWidth: max()
+    implicitHeight: 50
+    implicitWidth: 100
 
     ColumnLayout
     {
@@ -13,31 +16,26 @@ Item {
         anchors.fill: parent
         spacing: 0
 
-        Switch {
-            id: switche
-            Layout.topMargin: 5
-            //text: "Fuel pump"
-            Layout.alignment: Qt.AlignCenter
-//            Layout.fillHeight: true
+        Switch
+        {
+            id: outputSwitch
             Layout.fillWidth: true
-            rotation: 270
             Layout.preferredHeight: 30
-//            Layout.preferredWidth: 30
+            Layout.alignment: Qt.AlignCenter
+            rotation: 270
         }
 
         Label
         {
+            id: label
             Layout.fillWidth: true
-            Layout.preferredWidth: contentWidth
-            Layout.topMargin: 5
-
+            Layout.preferredHeight: contentHeight
+            Layout.margins: 10
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-
+            fontSizeMode: Text.VerticalFit
+            //wrapMode: Text.WordWrap
             text: "Fuel pump relay"
-            //fontSizeMode: Text.VerticalFit
-            wrapMode: Text.WordWrap
         }
-
     }
 }

@@ -19,5 +19,8 @@
         <file>InputItem2.qml</file>
         <file>OutputItem.qml</file>
         <file>ConfigureButton.qml</file>
+        <file>SwitchableOutputsView.qml</file>
+        <file>VariableOutputsView.qml</file>
+        <file>SwitchableInputsView.qml</file>
     </qresource>
 </RCC>
