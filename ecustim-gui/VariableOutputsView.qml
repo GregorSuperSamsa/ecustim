@@ -4,7 +4,6 @@ import QtQuick.Layouts 1.12
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Material 2.3
 
-//Item {
 
 Item
 {
@@ -12,10 +11,12 @@ Item
     {
         id: control
         title: "Variable Outputs"
+        background: Item{}
         anchors.fill: parent
 
         RowLayout
         {
+            anchors.margins:  -12
             anchors.fill: parent
             clip:true
             spacing: 5
