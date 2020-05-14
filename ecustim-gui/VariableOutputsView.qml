@@ -2,16 +2,30 @@ import QtQuick 2.6
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.12
 import QtGraphicalEffects 1.0
-import QtQuick.Controls.Material 2.3
+//import QtQuick.Controls.Material 2.3
 
 
 Item
 {
+    id: root
+    implicitHeight: control.implicitHeight
+
+    ListModel
+    {
+        id: variableOutputsModel
+        ListElement {caption: "RPM"}
+        ListElement {caption: "MAP"}
+        ListElement {caption: "TPS"}
+        ListElement {caption: "IAT"}
+        ListElement {caption: "CLT"}
+        ListElement {caption: "WBO2"}
+    }
+
     GroupBox
     {
         id: control
         title: "Variable Outputs"
-        background: Rectangle{anchors.fill: parent; color: "transparent"}
+        background: Rectangle{anchors.fill: parent; color: "transparent"; border.color: "transparent"}
         anchors.fill: parent
 
         RowLayout
@@ -20,49 +34,17 @@ Item
             anchors.fill: parent
             clip:true
             spacing: 5
-            VariableOutputItem
-            {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.alignment: Qt.AlignCenter
-                caption: "RPM"
-            }
 
-            VariableOutputItem
+            Repeater
             {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.alignment: Qt.AlignCenter
-                caption: "MAP"
-            }
-            VariableOutputItem
-            {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                // Layout.preferredWidth: 100
-                Layout.alignment: Qt.AlignCenter
-                caption: "TPS"
-            }
-            VariableOutputItem
-            {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.alignment: Qt.AlignCenter
-                caption: "IAT"
-            }
-            VariableOutputItem
-            {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.alignment: Qt.AlignCenter
-                caption: "CLT"
-            }
-            VariableOutputItem
-            {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.alignment: Qt.AlignCenter
-                caption: "O2"
+                model: variableOutputsModel
+                delegate: VariableOutputItem
+                {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.alignment: Qt.AlignCenter
+                    caption: model.caption
+                }
             }
         }
     }
