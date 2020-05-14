@@ -14,7 +14,7 @@ Item
     Pane
     {
         anchors.fill: parent
-        spacing: 0
+//        spacing: 0
         padding: 4
 
         Material.background: Style.color.foreground
@@ -22,8 +22,8 @@ Item
 
         ColumnLayout
         {
-            spacing: 0
             anchors.fill: parent
+            spacing: 0
 
             Label
             {
@@ -31,21 +31,14 @@ Item
 
                 Layout.fillWidth: true
                 Layout.preferredHeight: contentHeight
-
                 Layout.topMargin: 5
                 Layout.bottomMargin: 5
 
                 text: slider.value + "%"
-                //fontSizeMode: Text.VerticalFit
-                //Layout.fillHeight: false
                 font.pixelSize: 16
-                //font.pixelSize: Style.font.largePx * 2
-                //color: Style.color.foreground
-                //color: Style.color.background
 
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-
             }
 
 
@@ -54,11 +47,12 @@ Item
                 Layout.fillHeight: true
                 Layout.fillWidth: true
 
-                Slider {
+                Slider
+                {
+                    id: slider
                     Layout.fillHeight: true
                     Layout.fillWidth: true
 
-                    id: slider
                     from: 0
                     to: 100
                     stepSize: 1
@@ -72,10 +66,12 @@ Item
 
                 }
 
-                Slider {
+                Slider
+                {
                     id: progress
                     Layout.fillHeight: true
                     Layout.fillWidth: true
+
                     handle:Item{}
                     from: slider.from
                     to: slider.to
@@ -93,13 +89,13 @@ Item
                 id: type
                 Layout.fillWidth: true
                 Layout.preferredHeight: contentHeight
-                //Layout.topMargin: 5
+                Layout.topMargin: 5
+                Layout.bottomMargin: 5
 
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
 
                 text: caption
-                //fontSizeMode: Text.VerticalFit
             }
         }
     }
