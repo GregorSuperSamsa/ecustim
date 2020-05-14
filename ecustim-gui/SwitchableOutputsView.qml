@@ -38,7 +38,7 @@ Item
         {
             id: flow
             anchors.fill: parent
-            spacing: 0
+            spacing: 10
             padding: 0
 
             Repeater
@@ -46,7 +46,7 @@ Item
                 model: switchableOutputsModel
                 delegate: SwitchableOutputItem
                 {
-                    width:   Math.max(flow.width / (switchableOutputsModel.count), implicitWidth)
+                    width:   Math.max((flow.width - flow.spacing * (switchableOutputsModel.count - 1)) / switchableOutputsModel.count, implicitWidth)
                     caption: model.caption
                 }
             }
