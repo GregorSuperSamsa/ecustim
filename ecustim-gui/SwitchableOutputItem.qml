@@ -20,7 +20,7 @@ Item {
         Switch
         {
             id: outputSwitch
-            Layout.fillWidth: true
+            Layout.preferredWidth: 30
             Layout.preferredHeight: 30
             Layout.alignment: Qt.AlignCenter
             rotation: 270
