@@ -7,16 +7,10 @@ import QtQuick.Layouts 1.3
 Item
 {
     id: root
-    //color: Material.background
+    implicitHeight: columnLayout.implicitHeight
+    implicitWidth: columnLayout.implicitWidth
+
     property string caption: ""
-
-
-
-//    Material.background: Style.color.foreground
-
-//    Material.elevation: 10
-    //color: "blue"
-
     property bool active: false
     property color activeColor : Material.color(Material.Red, Material.Shade600)
     property color inactiveColor : Material.color(Material.Grey, Material.Shade800)
@@ -54,64 +48,71 @@ Item
         id: columnLayout
         anchors.fill: parent
         spacing: 0
-clip: true
+
         Rectangle
         {
-            id: statusIndicator
-            //Layout.margins: 10
-            Layout.preferredHeight: 30
-            Layout.preferredWidth: 30
+            id: statusIndicatorPlaceholder
+            Layout.preferredHeight:  30
+            Layout.fillWidth: true
             Layout.alignment: Qt.AlignCenter
-
-            radius: height /2
             color: "transparent"
-            border.color: Material.color(Material.Red, Material.Shade600)
-            border.width: 3
 
             Rectangle
             {
-                anchors.fill: parent
-                anchors.margins: 7
+                id: statusIndicator
+                anchors.centerIn: parent
+                implicitHeight:  30
+                implicitWidth: 30
+
+
                 radius: height /2
-                color: statusIndicator.border.color
+                color: "transparent"
+                border.color: Material.color(Material.Red, Material.Shade600)
+                border.width: 3
 
-                ColorAnimation on color {
-                    id: anime1
+                ColorAnimation on border.color
+                {
+                    id: anime
                     running: false
+                }
 
+                Rectangle
+                {
+                    anchors.fill: parent
+                    anchors.margins: 7
+                    radius: height /2
+                    color: statusIndicator.border.color
+
+                    ColorAnimation on color
+                    {
+                        id: anime1
+                        running: false
+                    }
                 }
             }
-
-            ColorAnimation on border.color {
-                id: anime
-                running: false
-
-            }
-
         }
 
         Label
         {
-            id: type
-
+            id: label
             Layout.fillWidth: true
-            Layout.preferredWidth: contentWidth
+            Layout.preferredHeight: contentHeight
             Layout.topMargin: 5
 
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
+            fontSizeMode: Text.VerticalFit
+            //wrapMode: Text.WordWrap
 
-            text: "Injector 1"
-            //fontSizeMode: Text.VerticalFit
-            wrapMode: Text.WordWrap
+            text: caption
 
+            // Test purposes only
             MouseArea
             {
                 anchors.fill: parent
                 onClicked:
                     active = !active;
             }
-
         }
     }
 }

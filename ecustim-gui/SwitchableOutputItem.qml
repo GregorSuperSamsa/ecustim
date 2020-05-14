@@ -9,6 +9,8 @@ Item {
     implicitHeight: columnLayout.implicitHeight
     implicitWidth: columnLayout.implicitWidth
 
+    property string caption: ""
+
     ColumnLayout
     {
         id: columnLayout
@@ -29,12 +31,13 @@ Item {
             id: label
             Layout.fillWidth: true
             Layout.preferredHeight: contentHeight
-            Layout.margins: 5
+            Layout.topMargin: 5
+
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             fontSizeMode: Text.VerticalFit
-            //wrapMode: Text.WordWrap
-            text: "Fuel pump relay"
+
+            text: caption
         }
     }
 }

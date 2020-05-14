@@ -6,23 +6,20 @@ import QtQuick.Controls.Material 2.3
 
 ApplicationWindow
 {
-    Material.theme: Material.Dark
-    Material.accent: Material.DeepOrange
-
     id: root
     visible: true
     width: 600
     height: 480
     title: qsTr("Ecustim")
-    //color: Style.color.background
+
+    Material.theme: Material.Dark
+    Material.accent: Material.DeepOrange
 
     ListModel
     {
         id: menuModel
         ListElement { title: "Trigger pattern"; index: 0; iconSource: "file:/trigger-wheel-1.png"}
         ListElement { title: "Sensors"; index: 1; iconSource: "file:/rpm.png" }
-        //ListElement { title: "Inputs"; index: 2; iconSource: "file:/input.png" }
-        //ListElement { title: "Outputs"; index: 3; iconSource: "file:/output.png" }
         ListElement { title: "Communication"; index: 2; iconSource: "file:/uart.png" }
     }
 
@@ -128,57 +125,22 @@ ApplicationWindow
                 Layout.alignment: Qt.AlignTop
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                //Layout.margins: 10
             }
 
-
-            SensorsView2
+            InputsOutputsView
             {
-                id: sensorsView2
+                id: inputsOutputsView
                 Layout.alignment: Qt.AlignTop
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                //Layout.margins: 10
-
             }
 
-            SensorsView
-            {
-                id: sensorsView
-                Layout.alignment: Qt.AlignTop
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                //Layout.margins: 10
-
-            }
-
-
-            OutputsView
-            {
-                Layout.alignment: Qt.AlignTop
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                //Layout.margins: 10
-            }
-            InputsView
-            {
-                Layout.alignment: Qt.AlignTop
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                //Layout.margins: 10
-            }
             ConnectionView
             {
                 Layout.alignment: Qt.AlignTop
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                //Layout.margins: 10
             }
-
-
         }
-
     }
-
-
 }

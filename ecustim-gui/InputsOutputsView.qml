@@ -37,6 +37,13 @@ View
                 Layout.fillWidth: true
                 Layout.preferredHeight: implicitHeight
             }
+
+            SwitchableInputsView
+            {
+                id: switchableInputsView
+                Layout.fillWidth: true
+                Layout.preferredHeight: implicitHeight
+            }
         }
     }
 }

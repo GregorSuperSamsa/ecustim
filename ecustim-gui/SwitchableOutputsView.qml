@@ -6,9 +6,17 @@ import QtQuick.Controls.Material 2.3
 
 Item
 {
-
     id: root
     implicitHeight: control.implicitHeight
+
+    ListModel
+    {
+        id: switchableOutputsModel
+        ListElement {caption: "Trigger 1"}
+        ListElement {caption: "Trigger 2"}
+        ListElement {caption: "Launch control"}
+        ListElement {caption: "Trigger 3"}
+    }
 
     GroupBox
     {
@@ -30,32 +38,32 @@ Item
         {
             id: flow
             anchors.fill: parent
-            spacing: 5
+            spacing: 0
             padding: 0
 
-            onImplicitHeightChanged:
+            Repeater
             {
-                console.log("Flow " + implicitHeight)
-                console.log("Groupbox content" + control.implicitContentHeight)
-                console.log("Groupbox control" + control.implicitHeight)
-                console.log("Groupbox bck" + control.implicitBackgroundHeight)
-                console.log("Item " + root.implicitHeight)
+                model: switchableOutputsModel
+                delegate: SwitchableOutputItem
+                {
+                    width:   Math.max(flow.width / (switchableOutputsModel.count), implicitWidth)
+                    caption: model.caption
+                }
             }
+            // TODO: Probably, this snippet should be moved in the model code
+            Component.onCompleted:
+            {
+                var maxImplicitWidth = 0;
+                for (var i = 0; i < children.length; ++i)
+                {
+                    maxImplicitWidth = Math.max(maxImplicitWidth, flow.children[i].implicitWidth)
+                }
 
-            OutputItem
-            {
-            }
-            OutputItem
-            {
-            }
-            OutputItem
-            {
-            }
-            OutputItem
-            {
-            }
-            OutputItem
-            {
+                for (var j = 0; j < children.length; ++j)
+                {
+                    children[j].implicitWidth = maxImplicitWidth
+                }
+                //flow.forceLayout()
             }
         }
     }

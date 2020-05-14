@@ -4,108 +4,67 @@ import QtQuick.Layouts 1.12
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Material 2.3
 
-
-GroupBox
+Item
 {
-    id: control
-    title: "Switchable Inputs"
-    Material.background: Style.color.foreground
-    Material.elevation: 10
-    RowLayout
+    id: root
+    implicitHeight: control.implicitHeight
+
+    ListModel
     {
+        id: switchableInputsModel
+        ListElement {caption: "Input 1"}
+        ListElement {caption: "Input 2"}
+        ListElement {caption: "Input 3"}
+        ListElement {caption: "Injector 1"}
+    }
+
+    GroupBox
+    {
+        id: control
         anchors.fill: parent
-        spacing: 0
+        title: "Switchable Inputs"
 
-        //            ConfigureButton
-        //            {
-        //                Layout.preferredWidth: 50
-        //                Layout.preferredHeight: 50
-        //                Layout.alignment: Qt.AlignCenter
-        //            }
-
-        InputItem2
+        background: Pane
         {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            //Layout.preferredHeight:
-            //Layout.preferredHeight: 50
-            Layout.alignment: Qt.AlignCenter
+            y: control.topPadding - control.padding
+            width: parent.width
+            height: parent.height - control.topPadding + control.padding
+
+            Material.background: Style.color.foreground
+            Material.elevation: 10
         }
 
-        InputItem2
+        Flow
         {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            //Layout.preferredHeight:
-            //Layout.preferredHeight: 50
-            Layout.alignment: Qt.AlignCenter
-        }
+            id: flow
+            anchors.fill: parent
+            spacing: 0
+            padding: 0
 
-        InputItem2
-        {Layout.fillWidth: true
-            Layout.fillHeight: true
-            //Layout.preferredHeight:
-            //Layout.preferredHeight: 50
-            Layout.alignment: Qt.AlignCenter
-        }
+            Repeater
+            {
+                model: switchableInputsModel
+                delegate: SwitchableInputItem
+                {
+                    width:   Math.max(flow.width / (switchableInputsModel.count), implicitWidth)
+                    caption: model.caption
+                }
+            }
+            // TODO: Probably, this snippet should be moved in the model code
+            Component.onCompleted:
+            {
+                var maxImplicitWidth = 0;
+                for (var i = 0; i < children.length; ++i)
+                {
+                    maxImplicitWidth = Math.max(maxImplicitWidth, flow.children[i].implicitWidth)
+                }
 
-        InputItem2
-        {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            //Layout.preferredHeight:
-            //Layout.preferredHeight: 50
-            Layout.alignment: Qt.AlignCenter
-        }
-
-        InputItem2
-        {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            //Layout.preferredHeight:
-            //Layout.preferredHeight: 50
-            Layout.alignment: Qt.AlignCenter
-        }
-
-        InputItem2
-        {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            //Layout.preferredHeight:
-            //Layout.preferredHeight: 50
-            Layout.alignment: Qt.AlignCenter
-        }
-        InputItem2
-        {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            //Layout.preferredHeight:
-            //Layout.preferredHeight: 50
-            Layout.alignment: Qt.AlignCenter
-        }
-        InputItem2
-        {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            //Layout.preferredHeight:
-            //Layout.preferredHeight: 50
-            Layout.alignment: Qt.AlignCenter
-        }
-        InputItem2
-        {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            //Layout.preferredHeight:
-            //Layout.preferredHeight: 50
-            Layout.alignment: Qt.AlignCenter
-        }
-        InputItem2
-        {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            //Layout.preferredHeight:
-            //Layout.preferredHeight: 50
-            Layout.alignment: Qt.AlignCenter
+                for (var j = 0; j < children.length; ++j)
+                {
+                    children[j].implicitWidth = maxImplicitWidth
+                }
+                //flow.forceLayout()
+            }
         }
     }
 }

@@ -11,7 +11,7 @@ Item
     {
         id: control
         title: "Variable Outputs"
-        background: Item{}
+        background: Rectangle{anchors.fill: parent; color: "transparent"}
         anchors.fill: parent
 
         RowLayout
@@ -20,7 +20,7 @@ Item
             anchors.fill: parent
             clip:true
             spacing: 5
-            SensorItem2
+            VariableOutputItem
             {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -28,14 +28,14 @@ Item
                 caption: "RPM"
             }
 
-            SensorItem2
+            VariableOutputItem
             {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignCenter
                 caption: "MAP"
             }
-            SensorItem2
+            VariableOutputItem
             {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -43,21 +43,21 @@ Item
                 Layout.alignment: Qt.AlignCenter
                 caption: "TPS"
             }
-            SensorItem2
+            VariableOutputItem
             {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignCenter
                 caption: "IAT"
             }
-            SensorItem2
+            VariableOutputItem
             {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.alignment: Qt.AlignCenter
                 caption: "CLT"
             }
-            SensorItem2
+            VariableOutputItem
             {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
