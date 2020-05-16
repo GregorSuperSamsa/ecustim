@@ -2,13 +2,10 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>TriggerPatternView.qml</file>
-        <file>View.qml</file>
-        <file>DialControl.qml</file>
         <file>Style.qml</file>
         <file>qmldir</file>
         <file>ConnectionView.qml</file>
         <file>VariableOutputItem.qml</file>
-        <file>TestForm.ui.qml</file>
         <file>InputsOutputsView.qml</file>
         <file>SwitchableInputItem.qml</file>
         <file>SwitchableOutputItem.qml</file>
