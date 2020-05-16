@@ -16,9 +16,12 @@ int main(int argc, char *argv[])
     communicator->Ports();
 
     TriggerGenerator tg(communicator);
-    //
+
+
+#ifndef Q_OS_ANDROID
     Test test;
     test.show();
+#endif
 
 
     QQuickStyle::setStyle("Material");
