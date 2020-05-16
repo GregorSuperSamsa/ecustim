@@ -9,6 +9,7 @@ Item
 {
     id: root
     implicitHeight: groupBox.implicitHeight
+    property bool minimized: groupBox.minimized
 
     ListModel
     {
