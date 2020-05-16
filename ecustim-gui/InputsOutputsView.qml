@@ -31,7 +31,18 @@ Item
                 id: variableOutputsView
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.minimumHeight: 200
+                Layout.preferredHeight: implicitHeight
+
+                property real previousImplicitHeigth: 0
+                onImplicitHeightChanged:
+                {
+                    Layout.fillHeight = (implicitHeight > previousImplicitHeigth) ? true : false
+                    previousImplicitHeigth = implicitHeight
+                }
+                Component.onCompleted:
+                {
+                    previousImplicitHeigth = implicitHeight
+                }
             }
 
             SwitchableOutputsView
