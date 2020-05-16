@@ -8,7 +8,7 @@ import QtGraphicalEffects 1.0
 Item
 {
     id: root
-    implicitHeight: control.implicitHeight
+    implicitHeight: groupBox.implicitHeight
 
     ListModel
     {
@@ -21,18 +21,17 @@ Item
         ListElement {caption: "WBO2"}
     }
 
-    GroupBox
+    CollapsableGroupBox
     {
-        id: control
-        title: "Variable Outputs"
-        background: Rectangle{anchors.fill: parent; color: "transparent"; border.color: "transparent"}
+        id: groupBox
         anchors.fill: parent
+        hasBackground: false
+        title: "Variable Outputs"
 
-        RowLayout
+        content: RowLayout
         {
-            anchors.margins:  -12
+            anchors.margins: -11
             anchors.fill: parent
-            clip:true
             spacing: 5
 
             Repeater
