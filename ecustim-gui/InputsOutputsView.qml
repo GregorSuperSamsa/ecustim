@@ -1,15 +1,18 @@
 import QtQuick 2.6
-import QtQuick.Controls 2.2
+import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Material 2.3
 
 
-View
+Item
 {
     id: root
-    content: ScrollView
+
+    ScrollView
     {
+        ScrollBar.vertical.interactive: true
+
         anchors.fill: parent
         clip: true
         contentHeight: Math.max(root.height,

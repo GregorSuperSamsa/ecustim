@@ -8,7 +8,7 @@ ApplicationWindow
 {
     id: root
     visible: true
-    width: 600
+    width: 640
     height: 480
     title: qsTr("Ecustim")
 
@@ -121,7 +121,6 @@ ApplicationWindow
 
             TriggerPatternView
             {
-                title: "Trigger pattern title"
                 Layout.alignment: Qt.AlignTop
                 Layout.fillHeight: true
                 Layout.fillWidth: true

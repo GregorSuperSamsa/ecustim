@@ -5,13 +5,7 @@ import QtQuick.Layouts 1.12
 import QtGraphicalEffects 1.0
 
 
-View
+Item
 {
-    title: "Connection"
-
-
-    content: ColumnLayout
-    {
-        anchors.fill: parent
-    }
+    id: root
 }

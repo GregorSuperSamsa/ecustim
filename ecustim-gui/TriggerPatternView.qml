@@ -5,14 +5,13 @@ import QtQuick.Layouts 1.12
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Material 2.3
 
-View
+Item
 {
+    id: root
     property color camGraphColor: Material.color(Material.Teal)//"#e53935"
     property color crankGraphColor: Material.accent//"#6f79a8"
 
-    title: "Trigger patterns"
-
-    content: ColumnLayout
+    ColumnLayout
     {
         anchors.fill: parent
         ComboBox
@@ -25,20 +24,20 @@ View
             id: control
             model: testis.patterns
             //indicator.x: control.spacing
-//            delegate: ItemDelegate
-//            {
-//                width: control.width
-//                contentItem: Text
-//                {
-//                    text: modelData
-//                    //color: "#21be2b"
-////                    color: headerColor
-////                    font: control.font
-//                    elide: Text.ElideRight
-//                    verticalAlignment: Text.AlignVCenter
-//                }
-//                highlighted: control.highlightedIndex == index
-//            }
+            //            delegate: ItemDelegate
+            //            {
+            //                width: control.width
+            //                contentItem: Text
+            //                {
+            //                    text: modelData
+            //                    //color: "#21be2b"
+            ////                    color: headerColor
+            ////                    font: control.font
+            //                    elide: Text.ElideRight
+            //                    verticalAlignment: Text.AlignVCenter
+            //                }
+            //                highlighted: control.highlightedIndex == index
+            //            }
 
             //            contentItem: Text {
             //                //                        leftPadding: 0
