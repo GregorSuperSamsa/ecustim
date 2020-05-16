@@ -47,6 +47,13 @@ Item
                 Layout.fillWidth: true
                 Layout.preferredHeight: implicitHeight
             }
+
+            Item
+            {
+                id: spacer
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
         }
     }
 }
