@@ -9,6 +9,7 @@
 
 int main(int argc, char *argv[])
 {
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
 
     QSharedPointer<Communicator> communicator(new Communicator);
