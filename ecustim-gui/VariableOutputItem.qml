@@ -69,6 +69,7 @@ Item
                 Slider
                 {
                     id: progress
+                    enabled: false
                     Layout.fillHeight: true
                     Layout.fillWidth: true
 
