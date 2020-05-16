@@ -10,13 +10,14 @@ Item
 {
     id: root
     property string caption: ""
+    implicitHeight: pane.implicitHeight
 
     Pane
     {
+        id: pane
         anchors.fill: parent
-//        spacing: 0
         padding: 4
-
+        implicitHeight: 100
         Material.background: Style.color.foreground
         Material.elevation: 10
 
@@ -40,7 +41,6 @@ Item
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
-
 
             RowLayout
             {
