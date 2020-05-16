@@ -13,5 +13,6 @@
         <file>SwitchableOutputsView.qml</file>
         <file>VariableOutputsView.qml</file>
         <file>SwitchableInputsView.qml</file>
+        <file>CollapsableGroupBox.qml</file>
     </qresource>
 </RCC>
