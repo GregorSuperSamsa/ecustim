@@ -7,7 +7,10 @@ import QtQuick.Controls.Material 2.3
 Item
 {
     id: root
-    implicitHeight: control.implicitHeight
+    property bool minimized: false
+
+    implicitHeight: minimized ? groupBox.label.implicitHeight + 10 : groupBox.implicitHeight
+    clip: true
 
     ListModel
     {
@@ -20,15 +23,54 @@ Item
 
     GroupBox
     {
-        id: control
+        id: groupBox
         anchors.fill: parent
         title: "Switchable Outputs"
+        Behavior on height { NumberAnimation { duration: 250 } }
+
+        label: Label
+        {
+            Canvas
+            {
+                id: indicatorCanvas
+                anchors.verticalCenter: parent.verticalCenter
+                x: groupBox.leftPadding
+                width: 12
+                height: 8
+                contextType: "2d"
+                onPaint: {
+                    context.reset();
+                    context.moveTo(0, 0);
+                    context.lineTo(width, 0);
+                    context.lineTo(width / 2, height);
+                    context.closePath();
+                    context.fillStyle = parent.color;
+                    context.fill();
+                }
+            }
+
+            id: label
+            width: groupBox.availableWidth
+            text: groupBox.title
+            leftPadding: indicatorCanvas.x + indicatorCanvas.width + groupBox.leftPadding /2
+            elide: Text.ElideRight
+            MouseArea
+            {
+                anchors.fill: parent
+                onClicked:
+                {
+                    minimized = !minimized
+                    indicatorCanvas.rotation = minimized ? -90 : 0
+                    indicatorCanvas.requestPaint()
+                }
+            }
+        }
 
         background: Pane
         {
-            y: control.topPadding - control.padding
+            y: parent.topPadding - parent.padding
             width: parent.width
-            height: parent.height - control.topPadding + control.padding
+            height: parent.height - parent.topPadding + parent.padding
 
             Material.background: Style.color.foreground
             Material.elevation: 10
