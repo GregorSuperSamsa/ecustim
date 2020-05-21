@@ -24,6 +24,17 @@ QVariant Model::data(const QModelIndex& index, int role) const
     return QVariant::fromValue(item);
 }
 
+QObject *Model::data(int index) const
+{
+    QObject* item = nullptr;
+    if (index >= 0 && index < mItems.count())
+    {
+        item = mItems.at(index);
+    }
+
+    return item;
+}
+
 void Model::insert(QObject* item)
 {
     beginInsertRows(QModelIndex(), 0, 0);

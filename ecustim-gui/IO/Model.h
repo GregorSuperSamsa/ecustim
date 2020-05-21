@@ -14,6 +14,7 @@ public:
 
     int rowCount(const QModelIndex&) const override;
     QVariant data(const QModelIndex& index, int role) const override;
+    QObject* data(int index) const;
 
     int count() const;
 
