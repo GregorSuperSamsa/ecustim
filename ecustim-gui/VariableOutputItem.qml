@@ -12,6 +12,9 @@ Item
     property string caption: ""
     implicitHeight: pane.implicitHeight
 
+    property real setValue: 0
+    property real actualValue: 0
+
     Pane
     {
         id: pane
@@ -62,7 +65,9 @@ Item
                     ToolTip.visible: hovered && !pressed
                     ToolTip.text: "Preset value"
                     onValueChanged:
-                        progress.value = slider.value
+                    {
+                        setValue = slider.value
+                    }
 
                 }
 
@@ -82,6 +87,7 @@ Item
                     ToolTip.timeout: 3000
                     ToolTip.visible: hovered && !pressed
                     ToolTip.text: "Actual value"
+                    value: actualValue
                 }
             }
 

@@ -5,7 +5,7 @@
 #include "Test.h"
 #include "Communicator.h"
 #include "TriggerGenerator.h"
-
+#include "IO/IO.h"
 
 int main(int argc, char *argv[])
 {
@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     communicator->Ports();
 
     TriggerGenerator tg(communicator);
-
+    IO io(communicator);
 
 #ifndef Q_OS_ANDROID
     Test test;
@@ -34,10 +34,9 @@ int main(int argc, char *argv[])
     }
     , Qt::QueuedConnection);
 
-
+    engine.rootContext()->setContextProperty("io", &io);
     engine.rootContext()->setContextProperty("testis", &tg);
     engine.load(url);
-
 
     return app.exec();
 }

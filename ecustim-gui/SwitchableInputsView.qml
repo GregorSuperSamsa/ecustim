@@ -17,6 +17,7 @@ Item
         ListElement {caption: "Input 2"}
         ListElement {caption: "Input 3"}
         ListElement {caption: "Injector 1"}
+
     }
 
     CollapsableGroupBox
