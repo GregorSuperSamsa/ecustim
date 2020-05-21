@@ -8,7 +8,9 @@ Item
 {
     id: root
     implicitHeight: groupBox.implicitHeight
+
     property bool minimized: groupBox.minimized
+    property variant model: 0
 
     CollapsableGroupBox
     {
@@ -25,7 +27,7 @@ Item
 
             Repeater
             {
-                model: io.voModel
+                model: root.model
                 delegate: VariableOutputItem
                 {
                     Layout.fillWidth: true

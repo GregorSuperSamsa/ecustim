@@ -40,7 +40,6 @@ Item
             anime1.to = inactiveColor
             anime1.duration = 100
             anime1.start()
-
         }
     }
 
@@ -67,7 +66,7 @@ Item
 
                 radius: height /2
                 color: "transparent"
-                border.color: Material.color(Material.Red, Material.Shade600)
+                border.color: active ? activeColor : inactiveColor
                 border.width: 3
 
                 ColorAnimation on border.color
@@ -105,14 +104,6 @@ Item
             //wrapMode: Text.WordWrap
 
             text: caption
-
-            // Test purposes only
-            MouseArea
-            {
-                anchors.fill: parent
-                onClicked:
-                    active = !active;
-            }
         }
     }
 }

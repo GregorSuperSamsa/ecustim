@@ -10,6 +10,8 @@ Item {
     implicitWidth: columnLayout.implicitWidth
 
     property string caption: ""
+    property real setValue: 0
+    property real actualValue: 0
 
     ColumnLayout
     {
@@ -24,6 +26,10 @@ Item {
             Layout.preferredHeight: 30
             Layout.alignment: Qt.AlignCenter
             rotation: 270
+            onCheckedChanged:
+            {
+                setValue = checked
+            }
         }
 
         Label

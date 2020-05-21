@@ -5,6 +5,11 @@ Model::Model(QObject *parent) : QAbstractListModel(parent)
 {
 }
 
+int Model::count() const
+{
+    return rowCount(QModelIndex());
+}
+
 int Model::rowCount(const QModelIndex&) const
 {
     return mItems.size();
@@ -24,6 +29,8 @@ void Model::insert(QObject* item)
     beginInsertRows(QModelIndex(), 0, 0);
     mItems.push_front(item);
     endInsertRows();
+
+    emit countChanged(count());
 }
 
 void Model::remove(QObject* item)
@@ -35,6 +42,8 @@ void Model::remove(QObject* item)
             beginRemoveRows(QModelIndex(), i, i);
             mItems.remove(i);
             endRemoveRows();
+
+            emit countChanged(count());
             break;
         }
     }

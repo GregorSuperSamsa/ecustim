@@ -10,6 +10,8 @@ Item
     id: root
     implicitHeight: groupBox.implicitHeight
 
+    property variant model: 0
+
     ListModel
     {
         id: switchableInputsModel
@@ -36,11 +38,13 @@ Item
 
             Repeater
             {
-                model: switchableInputsModel
+                id: repeater
+                model: root.model
                 delegate: SwitchableInputItem
                 {
-                    width:   Math.max((flow.width - flow.spacing * (switchableInputsModel.count - 1)) / switchableInputsModel.count, implicitWidth)
-                    caption: model.caption
+                    width:   Math.max((flow.width - flow.spacing * (repeater.model.count - 1)) / repeater.model.count, implicitWidth)
+                    caption: model.item.description
+                    active: model.item.actualValue
                 }
             }
             // TODO: Probably, this snippet should be moved in the model code

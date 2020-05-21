@@ -10,14 +10,7 @@ Item
     id: root
     implicitHeight: groupBox.implicitHeight
 
-    ListModel
-    {
-        id: switchableOutputsModel
-        ListElement {caption: "Trigger 1"}
-        ListElement {caption: "Trigger 2"}
-        ListElement {caption: "Launch control"}
-        ListElement {caption: "Trigger 3"}
-    }
+    property variant model: 0
 
     CollapsableGroupBox
     {
@@ -35,13 +28,20 @@ Item
 
             Repeater
             {
-                model: switchableOutputsModel
+                id: repeater
+                model: root.model
                 delegate: SwitchableOutputItem
                 {
-                    width:   Math.max((flow.width - flow.spacing * (switchableOutputsModel.count - 1)) / switchableOutputsModel.count, implicitWidth)
-                    caption: model.caption
+                    width:   Math.max((flow.width - flow.spacing * (repeater.model.count - 1)) / repeater.model.count, implicitWidth)
+
+                    visible: model.item.active
+                    caption: model.item.description
+                    actualValue: model.item.actualValue
+                    onSetValueChanged:
+                        model.item.setValue = setValue
                 }
             }
+
             // TODO: Probably, this snippet should be moved in the model code
             Component.onCompleted:
             {

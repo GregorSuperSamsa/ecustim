@@ -32,6 +32,8 @@ Item
                 Layout.fillWidth: true
                 Layout.fillHeight: minimized ? false : true
                 Layout.preferredHeight: implicitHeight
+
+                model: io.voModel
             }
 
             SwitchableOutputsView
@@ -39,6 +41,8 @@ Item
                 id: switchableOutputsView
                 Layout.fillWidth: true
                 Layout.preferredHeight: implicitHeight
+
+                model: io.soModel
             }
 
             SwitchableInputsView
@@ -46,6 +50,8 @@ Item
                 id: switchableInputsView
                 Layout.fillWidth: true
                 Layout.preferredHeight: implicitHeight
+
+                model: io.siModel
             }
 
             Item

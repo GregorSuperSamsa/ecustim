@@ -9,9 +9,9 @@ import '.'
 Item
 {
     id: root
-    property string caption: ""
     implicitHeight: pane.implicitHeight
 
+    property string caption: ""
     property real setValue: 0
     property real actualValue: 0
 
