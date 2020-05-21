@@ -14,34 +14,8 @@ Item
     property bool active: false
     property color activeColor : Material.color(Material.Red, Material.Shade600)
     property color inactiveColor : Material.color(Material.Grey, Material.Shade800)
+    property bool animateLedTransition: false
 
-    onActiveChanged:
-    {
-        if (active)
-        {
-            anime.stop()
-            anime.to = activeColor
-            anime.duration = 300
-            anime.start()
-
-            anime1.stop()
-            anime1.to = activeColor
-            anime1.duration = 300
-            anime1.start()
-        }
-        else
-        {
-            anime.stop()
-            anime.to = inactiveColor
-            anime.duration = 100
-            anime.start()
-
-            anime1.stop()
-            anime1.to = inactiveColor
-            anime1.duration = 100
-            anime1.start()
-        }
-    }
 
     ColumnLayout {
         id: columnLayout
@@ -104,6 +78,37 @@ Item
             //wrapMode: Text.WordWrap
 
             text: caption
+        }
+    }
+
+    onActiveChanged:
+    {
+        if (animateLedTransition)
+        {
+            if (active)
+            {
+                anime.stop()
+                anime.to = activeColor
+                anime.duration = 300
+                anime.start()
+
+                anime1.stop()
+                anime1.to = activeColor
+                anime1.duration = 300
+                anime1.start()
+            }
+            else
+            {
+                anime.stop()
+                anime.to = inactiveColor
+                anime.duration = 100
+                anime.start()
+
+                anime1.stop()
+                anime1.to = inactiveColor
+                anime1.duration = 100
+                anime1.start()
+            }
         }
     }
 }
