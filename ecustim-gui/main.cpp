@@ -16,10 +16,14 @@ int main(int argc, char *argv[])
     communicator->Ports();
 
     TriggerGenerator tg(communicator);
-    IO io(communicator);
+
+    QSharedPointer<IO> io( new IO(communicator));
+
+    Test test;
+    test.setCommunicator(communicator);
+    test.setIO(io);
 
 #ifndef Q_OS_ANDROID
-    Test test;
     test.show();
 #endif
 
@@ -34,7 +38,7 @@ int main(int argc, char *argv[])
     }
     , Qt::QueuedConnection);
 
-    engine.rootContext()->setContextProperty("io", &io);
+    engine.rootContext()->setContextProperty("io", io.data());
     engine.rootContext()->setContextProperty("testis", &tg);
     engine.load(url);
 

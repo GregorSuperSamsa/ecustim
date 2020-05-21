@@ -3,7 +3,10 @@
 
 #include <QMainWindow>
 #include "Communicator.h"
+#include "IO/IO.h"
 #include <QtCharts/QAbstractSeries>
+#include <QTimer>
+
 
 namespace Ui {
 class Test;
@@ -17,13 +20,18 @@ public:
     explicit Test(QWidget *parent = nullptr);
     ~Test();
 
+    void setCommunicator(QSharedPointer<Communicator> communicator);
+    void setIO(QSharedPointer<IO> io);
+
 private:
     Ui::Test *ui;
-    //Communicator c;
+    QSharedPointer<Communicator> communicator;
+    QSharedPointer<IO> io;
+    QTimer* timer;
 
 public slots:
     void on_pushButton_pressed();
-
+    void onTimeout();
 };
 
 #endif // TEST_H
