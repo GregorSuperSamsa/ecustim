@@ -14,7 +14,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        Communicator.cpp \
+        Communication/Bluetooth.cpp \
+        Communication/Communicator.cpp \
         IO/IO.cpp \
         IO/Item.cpp \
         IO/Model.cpp \
@@ -23,7 +24,8 @@ SOURCES += \
         main.cpp
 
 HEADERS += \
-    Communicator.h \
+    Communication/Bluetooth.h \
+    Communication/Communicator.h \
     IO/IO.h \
     IO/Item.h \
     IO/Model.h \
