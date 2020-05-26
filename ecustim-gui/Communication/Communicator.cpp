@@ -1,8 +1,16 @@
 #include "Communicator.h"
+#include "SerialItem.h"
+#include "BluetoothItem.h"
 #include <QtDebug>
+
 
 Communicator::Communicator(QObject *parent) : QObject(parent)
 {
+    bluetoothModel_ = new Model(this);
+    serialModel_ = new Model(this);
+
+    //bt = new Bluetooth(this);
+
     QObject::connect(&port, &QSerialPort::readyRead, this, &Communicator::handleReadyRead);
     QObject::connect(&port, &QSerialPort::errorOccurred, this, &Communicator::handleError);
 }
@@ -16,6 +24,16 @@ void Communicator::send(const QByteArray& data)
     }
     else
         qDebug() << "Port not open!";
+}
+
+Model *Communicator::bluetoothModel() const
+{
+    return bluetoothModel_;
+}
+
+Model *Communicator::serialModel() const
+{
+    return serialModel_;
 }
 
 void Communicator::Ports()
@@ -33,6 +51,23 @@ void Communicator::Ports()
                 + QObject::tr("Product Identifier: ") + (info.hasProductIdentifier() ? QString::number(info.productIdentifier(), 16) : QString()) + "\n"
                 + QObject::tr("Busy: ") + (info.isBusy() ? QObject::tr("Yes") : QObject::tr("No")) + "\n";
         qDebug() << qPrintable(s);
+
+    SerialItem* item = new SerialItem(this);
+    item->setName(info.portName());
+    item->setLocation(info.systemLocation());
+    item->setDescription(info.description());
+    item->setManufacturer(info.manufacturer());
+    item->setSerialNumber(info.serialNumber());
+    item->setVendorId(info.hasVendorIdentifier() ? QString::number(info.vendorIdentifier(), 16) : QString());
+    item->setProductId(info.hasProductIdentifier() ? QString::number(info.productIdentifier(), 16) : QString());
+
+
+    for (int i = 0; i < 20; i++)
+    {
+    serialModel_->insert(item);
+    }
+
+
     }
 
     port.setPortName(port_name);
