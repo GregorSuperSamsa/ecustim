@@ -5,3 +5,6 @@ build-ecustim-*/
 
 *.pro.user.*
 
+*gradle*
+
+*libs.xml
