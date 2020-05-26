@@ -6,7 +6,7 @@
 #include <QtCharts/QAbstractSeries>
 #include <QtCharts/QAbstractAxis>
 #include <QStringList>
-#include "Communicator.h"
+#include "Communication/Communicator.h"
 
 
 class TriggerGenerator : public QObject

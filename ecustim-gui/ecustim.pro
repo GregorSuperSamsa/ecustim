@@ -1,4 +1,6 @@
-QT += quick serialport widgets charts quickcontrols2
+QT += quick serialport bluetooth widgets charts quickcontrols2
+
+android: QT+= androidextras
 
 CONFIG += c++11
 
@@ -15,20 +17,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         Communication/Bluetooth.cpp \
+        Communication/BluetoothItem.cpp \
         Communication/Communicator.cpp \
+        Communication/SerialItem.cpp \
         IO/IO.cpp \
         IO/Item.cpp \
-        IO/Model.cpp \
+        Model.cpp \
         Test.cpp \
         TriggerGenerator.cpp \
         main.cpp
 
 HEADERS += \
     Communication/Bluetooth.h \
+    Communication/BluetoothItem.h \
     Communication/Communicator.h \
+    Communication/SerialItem.h \
     IO/IO.h \
     IO/Item.h \
-    IO/Model.h \
+    Model.h \
     Test.h \
     TriggerGenerator.h
 
@@ -47,3 +53,17 @@ RESOURCES += qml.qrc
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    android/AndroidManifest.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew \
+    android/gradlew.bat \
+    android/res/values/libs.xml
+
+contains(ANDROID_TARGET_ARCH,arm64-v8a) {
+    ANDROID_PACKAGE_SOURCE_DIR = \
+        $$PWD/android
+}

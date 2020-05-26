@@ -2,7 +2,7 @@
 #define TEST_H
 
 #include <QMainWindow>
-#include "Communicator.h"
+#include "Communication/Communicator.h"
 #include "IO/IO.h"
 #include <QtCharts/QAbstractSeries>
 #include <QTimer>

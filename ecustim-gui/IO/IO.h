@@ -3,8 +3,8 @@
 
 #include <QObject>
 #include <QSharedPointer>
-#include "Communicator.h"
-#include "Model.h"
+#include "Communication/Communicator.h"
+#include "../Model.h"
 
 
 class IO : public QObject
