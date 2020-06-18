@@ -1,7 +1,5 @@
 QT += quick serialport bluetooth widgets charts quickcontrols2
 
-android: QT+= androidextras
-
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -64,6 +62,9 @@ DISTFILES += \
     android/res/values/libs.xml
 
 contains(ANDROID_TARGET_ARCH,arm64-v8a) {
-    ANDROID_PACKAGE_SOURCE_DIR = \
+
+QT+= androidextras
+
+ANDROID_PACKAGE_SOURCE_DIR = \
         $$PWD/android
 }

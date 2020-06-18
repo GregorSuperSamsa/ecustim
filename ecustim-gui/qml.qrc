@@ -14,5 +14,7 @@
         <file>VariableOutputsView.qml</file>
         <file>SwitchableInputsView.qml</file>
         <file>CollapsableGroupBox.qml</file>
+        <file>UsbUartDelegateModel.qml</file>
+        <file>BluetoothDelegateModel.qml</file>
     </qresource>
 </RCC>

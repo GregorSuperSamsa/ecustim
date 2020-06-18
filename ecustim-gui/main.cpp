@@ -2,11 +2,13 @@
 #include <QQmlApplicationEngine>
 #include <QLoggingCategory>
 #include <QtQml/QQmlContext>
+#include <QQmlEngine>
 #include <QQuickStyle>
 #include "Test.h"
 #include "Communication/Communicator.h"
 #include "TriggerGenerator.h"
 #include "IO/IO.h"
+
 
 #if defined (Q_OS_ANDROID)
 #include <QtAndroid>
@@ -24,11 +26,13 @@ const QVector<QString> permissions({"android.permission.ACCESS_BACKGROUND_LOCATI
 
 int main(int argc, char *argv[])
 {
+
+#if defined (Q_OS_ANDROID)
     QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth* = true"));
+#endif
 
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
-
 
 #if defined (Q_OS_ANDROID)
     //Request requiered permissions at runtime
@@ -44,7 +48,6 @@ int main(int argc, char *argv[])
 
 
     QSharedPointer<Communicator> communicator(new Communicator);
-    communicator->Ports();
 
     TriggerGenerator tg(communicator);
 
@@ -69,6 +72,7 @@ int main(int argc, char *argv[])
     }
     , Qt::QueuedConnection);
 
+    qmlRegisterUncreatableType<Communicator>("Communication", 1, 0, "Communication", "");
     engine.rootContext()->setContextProperty("communicator", communicator.data());
     engine.rootContext()->setContextProperty("io", io.data());
     engine.rootContext()->setContextProperty("testis", &tg);

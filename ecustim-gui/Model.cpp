@@ -60,6 +60,13 @@ void Model::remove(QObject* item)
     }
 }
 
+void Model::clearAll()
+{
+    beginResetModel();
+    mItems.clear();
+    endResetModel();
+}
+
 QHash<int, QByteArray> Model::roleNames() const
 {
     QHash<int, QByteArray> roles;

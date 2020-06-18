@@ -21,6 +21,7 @@ public:
 public slots:
     void insert(QObject* item);
     void remove(QObject* item);
+    void clearAll();
 
 signals:
     void countChanged(int count);
