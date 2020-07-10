@@ -8,10 +8,10 @@ Q_DECLARE_METATYPE(QtCharts::QAbstractSeries *)
 Q_DECLARE_METATYPE(QtCharts::QAbstractAxis *)
 
 
-TriggerGenerator::TriggerGenerator(QSharedPointer<Communicator> communicator, QObject *parent) : QObject(parent),
+TriggerGenerator::TriggerGenerator(QSharedPointer<CommunicationManager> communicator, QObject *parent) : QObject(parent),
     communicator(communicator)
 {
-    QObject::connect(communicator.data(), &Communicator::triggerSamples, this, &TriggerGenerator::onTriggerSamples);
+    QObject::connect(communicator.data(), &CommunicationManager::triggerSamples, this, &TriggerGenerator::onTriggerSamples);
 
 
     patterns_ << "1: 4 cylinder dizzy";

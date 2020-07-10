@@ -12,46 +12,44 @@ int Model::count() const
 
 int Model::rowCount(const QModelIndex&) const
 {
-    return mItems.size();
+    return items.size();
 }
 
 QVariant Model::data(const QModelIndex& index, int role) const
 {
-
     Q_UNUSED(role)
 
-    QObject* item = mItems.at(index.row());
-    return QVariant::fromValue(item);
+    return QVariant::fromValue(items.at(index.row()).data());
 }
 
-QObject *Model::data(int index) const
+QSharedPointer<QObject> Model::data(int index) const
 {
-    QObject* item = nullptr;
-    if (index >= 0 && index < mItems.count())
+    QSharedPointer<QObject> item(nullptr);
+    if (index >= 0 && index < items.count())
     {
-        item = mItems.at(index);
+        item = items.at(index);
     }
 
     return item;
 }
 
-void Model::insert(QObject* item)
+void Model::insert(QSharedPointer<QObject> item)
 {
     beginInsertRows(QModelIndex(), 0, 0);
-    mItems.push_front(item);
+    items.push_front(item);
     endInsertRows();
 
     emit countChanged(count());
 }
 
-void Model::remove(QObject* item)
+void Model::remove(QSharedPointer<QObject> item)
 {
-    for (int i = 0; i < mItems.size(); ++i)
+    for (int i = 0; i < items.size(); ++i)
     {
-        if (mItems.at(i) == item)
+        if (items.at(i) == item)
         {
             beginRemoveRows(QModelIndex(), i, i);
-            mItems.remove(i);
+            items.remove(i);
             endRemoveRows();
 
             emit countChanged(count());
@@ -63,7 +61,7 @@ void Model::remove(QObject* item)
 void Model::clearAll()
 {
     beginResetModel();
-    mItems.clear();
+    items.clear();
     endResetModel();
 }
 

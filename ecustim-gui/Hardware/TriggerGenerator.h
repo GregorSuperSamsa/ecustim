@@ -6,7 +6,7 @@
 #include <QtCharts/QAbstractSeries>
 #include <QtCharts/QAbstractAxis>
 #include <QStringList>
-#include "Communication/Communicator.h"
+#include "Communication/CommunicationManager.h"
 
 
 class TriggerGenerator : public QObject
@@ -16,10 +16,10 @@ class TriggerGenerator : public QObject
     Q_PROPERTY(QStringList patterns MEMBER patterns_ NOTIFY patternsChanged)
 
 public:
-    explicit TriggerGenerator(QSharedPointer<Communicator> communicator, QObject *parent = nullptr);
+    explicit TriggerGenerator(QSharedPointer<CommunicationManager> communicator, QObject *parent = nullptr);
 
 private:
-    QSharedPointer<Communicator> communicator;
+    QSharedPointer<CommunicationManager> communicator;
     QVector<QPointF> samples_crankshaft;
     QVector<QPointF> samples_camshaft;
 

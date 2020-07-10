@@ -2,10 +2,10 @@
 #define TEST_H
 
 #include <QMainWindow>
-#include "Communication/Communicator.h"
-#include "IO/IO.h"
 #include <QtCharts/QAbstractSeries>
 #include <QTimer>
+#include "Communication/CommunicationManager.h"
+#include "Hardware/IO/IOManager.h"
 
 
 namespace Ui {
@@ -20,12 +20,12 @@ public:
     explicit Test(QWidget *parent = nullptr);
     ~Test();
 
-    void setCommunicator(QSharedPointer<Communicator> communicator);
+    void setCommunicator(QSharedPointer<CommunicationManager> communicator);
     void setIO(QSharedPointer<IO> io);
 
 private:
     Ui::Test *ui;
-    QSharedPointer<Communicator> communicator;
+    QSharedPointer<CommunicationManager> communicator;
     QSharedPointer<IO> io;
     QTimer* timer;
 

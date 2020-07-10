@@ -3,7 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.12
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Material 2.3
-import Communication 1.0
+import CommunicationManager 1.0
 
 
 Item
@@ -20,36 +20,42 @@ Item
             id: rowLayout
             Layout.alignment: Qt.AlignTop
             Layout.fillWidth: true
-            Layout.preferredHeight: contentItem.implicitHeight
             spacing: 9
 
             RadioButton
             {
                 id: radioButtonBluetooth
-                Layout.fillWidth: true
-                Layout.preferredWidth: 1
+                //Layout.fillWidth: true
+                Layout.preferredWidth: implicitWidth
                 Layout.preferredHeight: implicitHeight
                 text: qsTr("Bluetooth")
+                checked: communicationManager.connectionType === CommunicationManager.BLUETOOTH
                 onClicked:
-                    communicator.setConnectionType(Communication.BLUETOOTH);
-
+                {
+                    list.clearSelection()
+                    communicationManager.setConnectionType(CommunicationManager.BLUETOOTH);
+                }
             }
 
             RadioButton
             {
                 id: radioButtonUsbUart
-                Layout.fillWidth: true
-                Layout.preferredWidth: 1
+                //Layout.fillWidth: true
+                Layout.preferredWidth: implicitWidth
                 Layout.preferredHeight: implicitHeight
                 text: qsTr("USB UART")
+                checked: communicationManager.connectionType === CommunicationManager.USB_UART
                 onClicked:
-                    communicator.setConnectionType(Communication.USB_UART);
+                {
+                    list.clearSelection()
+                    communicationManager.setConnectionType(CommunicationManager.USB_UART);
+                }
             }
 
             Item
             {
                 Layout.fillWidth: true
-                Layout.preferredWidth: 2
+
             }
         }
 
@@ -65,26 +71,28 @@ Item
             boundsBehavior: Flickable.StopAtBounds
             ScrollBar.vertical: ScrollBar {}
 
-            model:  getDelegateModel()
-            function getDelegateModel()
+            model: remoteDeviceDelegate
+
+            function clearSelection()
             {
-                switch(communicator.connectionType)
-                {
-                case Communication.BLUETOOTH:
-                    return bluetoothDelegateModel;
-                case Communication.USB_UART:
-                    return usbUartDelegateModel;
-                case Communication.UNKNOWN:
-                    return 0
-                }
+                remoteDeviceDelegate.selectedIndex = -1;
             }
+        }
+
+        BusyIndicator
+        {
+            id: busy
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.preferredWidth: implicitWidth
+            Layout.preferredHeight: running ? implicitHeight : 0
+            running: (communicationManager.connectionStatus === CommunicationManager.DISCOVERY_STARTED)
         }
 
         RowLayout
         {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
             Layout.fillWidth: true
-            Layout.preferredHeight: contentItem.implicitHeight
+            Layout.preferredHeight:  contentItem.implicitHeight
 
             Button
             {
@@ -93,7 +101,10 @@ Item
                 Layout.preferredHeight: implicitHeight
                 text: "Find"
                 onClicked:
-                    communicator.findDevices(communicator.connectionType)
+                {
+                    list.clearSelection()
+                    communicationManager.findDevices()
+                }
             }
 
             Button
@@ -102,28 +113,24 @@ Item
                 Layout.preferredHeight: implicitHeight
                 id: buttonConnect
                 text: "Connect"
+                onClicked:
+                    communicationManager.connect(remoteDeviceDelegate.connectionString)
             }
         }
+
     }
 
-    UsbUartDelegateModel
+    RemoteDeviceDelegate
     {
-        id: usbUartDelegateModel
-        onSelectedIndexChanged:
-        {
-            list.currentIndex = selectedIndex
-            console.log("List uart current index = " + list.currentIndex)
-
-        }
+        id: remoteDeviceDelegate
     }
 
-    BluetoothDelegateModel
+    Connections
     {
-        id: bluetoothDelegateModel
-        onSelectedIndexChanged:
+        target: communicationManager
+        onConnectionStatusChanged:
         {
-            list.currentIndex = selectedIndex
-            console.log("List bt current index = " + list.currentIndex)
+           //
         }
     }
 }

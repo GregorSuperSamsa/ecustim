@@ -3,8 +3,8 @@
 
 #include <QObject>
 #include <QSharedPointer>
-#include "Communication/Communicator.h"
-#include "../Model.h"
+#include "Communication/CommunicationManager.h"
+#include "UI/Model.h"
 
 
 class IO : public QObject
@@ -15,7 +15,7 @@ class IO : public QObject
     Q_PROPERTY(Model* siModel READ siModel CONSTANT)
 
 public:
-    explicit IO(QSharedPointer<Communicator> communicator, QObject *parent = nullptr);
+    explicit IO(QSharedPointer<CommunicationManager> communicator, QObject *parent = nullptr);
 
     Model* voModel() const;
     Model* soModel() const;
@@ -29,7 +29,7 @@ private:
     // Switchable inputs data model
     Model* siModel_;
     // Communicator
-    QSharedPointer<Communicator> communicator;
+    QSharedPointer<CommunicationManager> communicator;
 
 };
 

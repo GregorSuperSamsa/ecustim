@@ -1,6 +1,6 @@
 #include "Test.h"
 #include "ui_Test.h"
-#include "IO/Item.h"
+#include "Hardware/IO/IOItem.h"
 
 
 Test::Test(QWidget *parent) :
@@ -22,7 +22,7 @@ Test::~Test()
     delete ui;
 }
 
-void Test::setCommunicator(QSharedPointer<Communicator> communicator)
+void Test::setCommunicator(QSharedPointer<CommunicationManager> communicator)
 {
     this->communicator = communicator;
 
@@ -45,10 +45,9 @@ void Test::onTimeout()
 {
     for (int i = 0; i < io->siModel()->count(); ++i)
     {
-        Item* item = qobject_cast<Item*>(io->siModel()->data(i));
-        if (item != nullptr)
+        QSharedPointer<Item> item = qobject_cast<QSharedPointer<Item>>(io->siModel()->data(i));
+        if (!item.isNull())
         {
-
             if (item->actualValue() == 0)
                 item->setActualValue(1);
             else

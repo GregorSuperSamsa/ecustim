@@ -2,11 +2,13 @@ QT += quick serialport bluetooth widgets charts quickcontrols2
 
 CONFIG += c++11
 
+TARGET = ecustim-gui
+
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Refer to the documentation for the
 # deprecated API to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
+#DEFINES += QT_DEPRECATED_WARNINGS
 
 # You can also make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -14,27 +16,29 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        Communication/Bluetooth.cpp \
-        Communication/BluetoothItem.cpp \
-        Communication/Communicator.cpp \
-        Communication/SerialItem.cpp \
-        IO/IO.cpp \
-        IO/Item.cpp \
-        Model.cpp \
-        Test.cpp \
-        TriggerGenerator.cpp \
-        main.cpp
+    Communication/Communication.cpp \
+    Communication/CommunicationManager.cpp \
+    Communication/Bluetooth/Bluetooth.cpp \
+    Communication/RemoteDeviceItem.cpp \
+    Communication/Uart/Uart.cpp \
+    Hardware/IO/IOItem.cpp \
+    Hardware/IO/IOManager.cpp \
+    Hardware/TriggerGenerator.cpp \
+    UI/Model.cpp \
+    Test.cpp \
+    main.cpp
 
 HEADERS += \
-    Communication/Bluetooth.h \
-    Communication/BluetoothItem.h \
-    Communication/Communicator.h \
-    Communication/SerialItem.h \
-    IO/IO.h \
-    IO/Item.h \
-    Model.h \
-    Test.h \
-    TriggerGenerator.h
+    Communication/Communication.h \
+    Communication/CommunicationManager.h \
+    Communication/Bluetooth/Bluetooth.h \
+    Communication/RemoteDeviceItem.h \
+    Communication/Uart/Uart.h \
+    Hardware/IO/IOItem.h \
+    Hardware/IO/IOManager.h \
+    Hardware/TriggerGenerator.h \
+    UI/Model.h \
+    Test.h
 
 FORMS += \
     Test.ui
@@ -52,6 +56,17 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+
+if (contains(ANDROID_TARGET_ARCH, arm64-v8a) || contains(ANDROID_TARGET_ARCH, armeabi-v7a)) {
+
+QT+= androidextras
+
+ANDROID_PACKAGE_SOURCE_DIR = \
+        $$PWD/android
+}
+
+#QMAKE_POST_LINK = sudo setcap CAP_NET_ADMIN=eip $TARGET
+
 DISTFILES += \
     android/AndroidManifest.xml \
     android/build.gradle \
@@ -60,11 +75,3 @@ DISTFILES += \
     android/gradlew \
     android/gradlew.bat \
     android/res/values/libs.xml
-
-contains(ANDROID_TARGET_ARCH,arm64-v8a) {
-
-QT+= androidextras
-
-ANDROID_PACKAGE_SOURCE_DIR = \
-        $$PWD/android
-}

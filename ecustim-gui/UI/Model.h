@@ -2,6 +2,7 @@
 #define MODEL_H
 
 #include <QAbstractListModel>
+#include <QSharedPointer>
 
 
 class Model : public QAbstractListModel
@@ -14,13 +15,13 @@ public:
 
     int rowCount(const QModelIndex&) const override;
     QVariant data(const QModelIndex& index, int role) const override;
-    QObject* data(int index) const;
+    QSharedPointer<QObject> data(int index) const;
 
     int count() const;
 
 public slots:
-    void insert(QObject* item);
-    void remove(QObject* item);
+    void insert(QSharedPointer<QObject> item);
+    void remove(QSharedPointer<QObject> item);
     void clearAll();
 
 signals:
@@ -30,7 +31,7 @@ protected:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    QVector<QObject*> mItems;
+    QVector<QSharedPointer<QObject>> items;
     int count_;
 };
 #endif // MODEL_H
