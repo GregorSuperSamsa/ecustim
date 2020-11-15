@@ -11,7 +11,7 @@ IO::IO(QSharedPointer<CommunicationManager> communicator, QObject *parent)
     {
     voModel_ = new Model(this);
 
-    QSharedPointer<Item> i1(new Item);
+    QSharedPointer<IOItem> i1(new IOItem);
     i1->setActive(true);
     i1->setDescription("RPM");
     i1->setAddress(255);
@@ -19,7 +19,7 @@ IO::IO(QSharedPointer<CommunicationManager> communicator, QObject *parent)
     i1->setActualValue(0);
     voModel_->insert(i1);
     //
-    QSharedPointer<Item> i3(new Item);
+    QSharedPointer<IOItem> i3(new IOItem);
     i3->setActive(true);
     i3->setDescription("TPS");
     i3->setAddress(255);
@@ -27,7 +27,7 @@ IO::IO(QSharedPointer<CommunicationManager> communicator, QObject *parent)
     i3->setActualValue(0);
     voModel_->insert(i3);
     //
-    QSharedPointer<Item> i2(new Item);
+    QSharedPointer<IOItem> i2(new IOItem);
     i2->setActive(true);
     i2->setDescription("CLT");
     i2->setAddress(255);
@@ -41,28 +41,28 @@ IO::IO(QSharedPointer<CommunicationManager> communicator, QObject *parent)
     {
     soModel_ = new Model(this);
 
-    QSharedPointer<Item> so1(new Item);
+    QSharedPointer<IOItem> so1(new IOItem);
     so1->setActive(true);
     so1->setDescription("Trigger 1");
     so1->setAddress(255);
     so1->setSetValue(0);
     so1->setActualValue(0);
 
-    QSharedPointer<Item> so2(new Item);
+    QSharedPointer<IOItem> so2(new IOItem);
     so2->setActive(true);
     so2->setDescription("Trigger 2");
     so2->setAddress(255);
     so2->setSetValue(0);
     so2->setActualValue(0);
 
-    QSharedPointer<Item> so3(new Item);
+    QSharedPointer<IOItem> so3(new IOItem);
     so3->setActive(true);
     so3->setDescription("Launch control");
     so3->setAddress(255);
     so3->setSetValue(0);
     so3->setActualValue(0);
 
-    QSharedPointer<Item> so4(new Item);
+    QSharedPointer<IOItem> so4(new IOItem);
     so4->setActive(true);
     so4->setDescription("Trigger 3");
     so4->setAddress(255);
@@ -80,28 +80,28 @@ IO::IO(QSharedPointer<CommunicationManager> communicator, QObject *parent)
     {
     siModel_ = new Model(this);
 
-    QSharedPointer<Item> si1(new Item);
+    QSharedPointer<IOItem> si1(new IOItem);
     si1->setActive(true);
     si1->setDescription("Injector 1");
     si1->setAddress(255);
     si1->setSetValue(0);
     si1->setActualValue(1);
 
-    QSharedPointer<Item> si2(new Item);
+    QSharedPointer<IOItem> si2(new IOItem);
     si2->setActive(true);
     si2->setDescription("Launch control in");
     si2->setAddress(255);
     si2->setSetValue(0);
     si2->setActualValue(0);
 
-    QSharedPointer<Item> si3(new Item);
+    QSharedPointer<IOItem> si3(new IOItem);
     si3->setActive(true);
     si3->setDescription("Test input 666");
     si3->setAddress(255);
     si3->setSetValue(0);
     si3->setActualValue(1);
 
-    QSharedPointer<Item> si4(new Item);
+    QSharedPointer<IOItem> si4(new IOItem);
     si4->setActive(true);
     si4->setDescription("Warmup enrichment");
     si4->setAddress(255);

@@ -5,7 +5,7 @@
 #include <QDebug>
 
 
-class Item: public QObject
+class IOItem: public QObject
 {
     Q_OBJECT
 
@@ -16,7 +16,7 @@ class Item: public QObject
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
 
 public:
-    Item(QObject *parent = nullptr);
+    IOItem(QObject *parent = nullptr);
     //
     int setValue() const;
     void setSetValue(int setValue);

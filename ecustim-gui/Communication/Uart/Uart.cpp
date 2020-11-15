@@ -44,16 +44,22 @@ void Uart::connect(const QString& connectionInfo)
         qDebug() << "Port:" << qPrintable(connectionInfo);
 #endif
         disconnect();
+
+
         localDevice->setPortName(connectionInfo);
-        localDevice->open(QIODevice::ReadWrite);
+        if (localDevice->open(QIODevice::ReadWrite)) {
+            emit remoteDeviceConnected(connectionInfo);
+        }
     }
 }
 
 // Disconnect from remote device
 void Uart::disconnect()
 {
-    if (isConnected())
+    if (isConnected()) {
         localDevice->close();
+    }
+    emit remoteDeviceDisconnected(localDevice->portName());
 }
 
 // Check whether we are currently connected to a remote device
@@ -62,64 +68,70 @@ bool Uart::isConnected() const
     return (isValid() && localDevice->isOpen());
 }
 
-// Get currently available remote devices
-void Uart::getRemoteDevices()
+// Start discovering currently available remote devices
+void Uart::startRemoteDeviceDiscovery()
 {
-    if (!isValid())
-        return;
-
-    //
-    QList<QSerialPortInfo> infos = QSerialPortInfo::availablePorts();
-    for(const QSerialPortInfo& info : infos)
+    if (isValid())
     {
-        qDebug() << "Name:         " <<  qPrintable(info.portName());
-        qDebug() << "Description:  " <<  qPrintable(info.description());
-        qDebug() << "Vendor id:    " << (info.hasVendorIdentifier() ? qPrintable(QString::number(info.vendorIdentifier(), 16)) : qPrintable("NONE"));
-        qDebug() << "Product id:   " << (info.hasProductIdentifier() ? qPrintable(QString::number(info.productIdentifier(), 16)) : qPrintable("NONE"));
-        qDebug() << "Serial number:" <<  qPrintable(info.serialNumber());
-        qDebug() << "Manufacturer: " <<  qPrintable(info.manufacturer());
-
-        QSharedPointer<RemoteDeviceItem> item(new RemoteDeviceItem);
         //
-        item->setDisplayText(info.description() + "\n" + info.portName());
-        //
-        item->setConnectionString(info.portName());
-        // Additional info
-        QStringList additionalInfo;
-        QString field;
-        // Vendor id
-        if (info.hasVendorIdentifier())
+        QList<QSerialPortInfo> infos = QSerialPortInfo::availablePorts();
+        for(const QSerialPortInfo& info : infos)
         {
-            field = QString::number(info.vendorIdentifier(), 16);
-            if (!field.isEmpty()) {
-                additionalInfo << "Vendor identifier:" << field;
-            }
-        }
-        // Product id
-        if (info.hasProductIdentifier())
-        {
-            field = QString::number(info.productIdentifier(), 16);
-            if (!field.isEmpty()) {
-                additionalInfo << "Product identifier:" << field;
-            }
-        }
-        // Serial number
-        field = info.serialNumber().trimmed();
-        if (!field.isEmpty()) {
-            additionalInfo << "Serial number:" << field;
-        }
-        // Manufacturer
-        field = info.manufacturer().trimmed();
-        if (!field.isEmpty()) {
-            additionalInfo << "Manufacturer:" << field;
-        }
+            qDebug() << "Name:         " <<  qPrintable(info.portName());
+            qDebug() << "Description:  " <<  qPrintable(info.description());
+            qDebug() << "Vendor id:    " << (info.hasVendorIdentifier() ? qPrintable(QString::number(info.vendorIdentifier(), 16)) : qPrintable("NONE"));
+            qDebug() << "Product id:   " << (info.hasProductIdentifier() ? qPrintable(QString::number(info.productIdentifier(), 16)) : qPrintable("NONE"));
+            qDebug() << "Serial number:" <<  qPrintable(info.serialNumber());
+            qDebug() << "Manufacturer: " <<  qPrintable(info.manufacturer());
 
-        item->setAdditionalInfo(additionalInfo);
+            QSharedPointer<RemoteDeviceItem> item(new RemoteDeviceItem);
+            //
+            item->setDisplayText(info.description() + "\n" + info.portName());
+            //
+            item->setConnectionString(info.portName());
+            // Additional info
+            QStringList additionalInfo;
+            QString field;
+            // Vendor id
+            if (info.hasVendorIdentifier())
+            {
+                field = QString::number(info.vendorIdentifier(), 16);
+                if (!field.isEmpty()) {
+                    additionalInfo << "Vendor identifier:" << field;
+                }
+            }
+            // Product id
+            if (info.hasProductIdentifier())
+            {
+                field = QString::number(info.productIdentifier(), 16);
+                if (!field.isEmpty()) {
+                    additionalInfo << "Product identifier:" << field;
+                }
+            }
+            // Serial number
+            field = info.serialNumber().trimmed();
+            if (!field.isEmpty()) {
+                additionalInfo << "Serial number:" << field;
+            }
+            // Manufacturer
+            field = info.manufacturer().trimmed();
+            if (!field.isEmpty()) {
+                additionalInfo << "Manufacturer:" << field;
+            }
 
-        emit remoteDeviceDiscovered(item);
+            item->setAdditionalInfo(additionalInfo);
+
+            emit remoteDeviceDiscovered(item);
+        }
     }
 
     emit remoteDeviceDiscoveryFinished();
+}
+
+// Stop discovering currently available remote devices
+void Uart::stopRemoteDeviceDiscovery()
+{
+    return;
 }
 
 // Send raw data to the remote device

@@ -28,8 +28,11 @@ public:
     // Check whether we are currently connected to a remote device
     bool isConnected() const;
 
-    // Get currently available remote devices
-    void getRemoteDevices();
+    // Start discovering currently available remote devices
+    void startRemoteDeviceDiscovery();
+
+    // Stop discovering currently available remote devices
+    void stopRemoteDeviceDiscovery();
 
     // Send raw data to the remote device
     void send(const QByteArray& bytes);

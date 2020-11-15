@@ -8,154 +8,246 @@ import QtQuick.Controls.Material 2.3
 Item
 {
     id: root
-    property color camGraphColor: Material.color(Material.Teal)//"#e53935"
-    property color crankGraphColor: Material.accent//"#6f79a8"
 
-    ColumnLayout
-    {
+    ColumnLayout {
         anchors.fill: parent
-        ComboBox
-        {
-            Layout.alignment: Qt.AlignTop
+        spacing: 0
+
+        ComboBox {
+            id: combo
             Layout.fillWidth: true
-            Layout.leftMargin: 5
-            Layout.rightMargin: 5
-            //height: 30
-            id: control
-            model: testis.patterns
-            //indicator.x: control.spacing
-            //            delegate: ItemDelegate
-            //            {
-            //                width: control.width
-            //                contentItem: Text
-            //                {
-            //                    text: modelData
-            //                    //color: "#21be2b"
-            ////                    color: headerColor
-            ////                    font: control.font
-            //                    elide: Text.ElideRight
-            //                    verticalAlignment: Text.AlignVCenter
-            //                }
-            //                highlighted: control.highlightedIndex == index
-            //            }
+            Layout.preferredHeight: implicitHeight
+            model: triggerManager.model
+            displayText: currentText
+            Material.elevation: 1
 
-            //            contentItem: Text {
-            //                //                        leftPadding: 0
-            //                //                        rightPadding: control.indicator.width + control.spacing
-
-            //                rightPadding: 0
-            //                leftPadding: control.indicator.width + control.spacing
-
-            //                text: control.displayText
-            //                font: control.font
-            //                color: control.pressed ? headerColor : headerColor
-            //                horizontalAlignment: Text.AlignLeft
-            //                verticalAlignment: Text.AlignVCenter
-            //                elide: Text.ElideRight
-            //            }
-
-            //            background: Rectangle
-            //            {
-            //                implicitWidth: 120
-            //                implicitHeight: 30
-            //                color: backgroundColor
-            //                border.color: control.pressed ? headerColor : headerColor
-            //                border.width: control.visualFocus ? 2 : 1
-            //                radius: 2
-            //            }
-
-            //            popup: Popup {
-            //                y: control.height //- 1
-            //                width: control.width
-            //                implicitHeight: listview.contentHeight
-            //                padding: 1
-
-            //                contentItem: ListView {
-            //                    id: listview
-            //                    clip: true
-            //                    model: control.popup.visible ? control.delegateModel : null
-            //                    currentIndex: control.highlightedIndex
-
-            //                    ScrollIndicator.vertical: ScrollIndicator { }
-            //                }
-
-            //                background: Rectangle {
-            //                    border.color: headerColor
-            //                    radius: 2
-            //                }
-            //}
-        }
-
-        ChartView
-        {
-            Layout.alignment: Qt.AlignBottom
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.topMargin: 100
-            Layout.bottomMargin: 100
-            id: chart_view_cam
-            //antialiasing: true
-            margins { top: 0; bottom: 0; left: 0; right: 0 }
-            legend.visible: false
-            animationOptions: ChartView.NoAnimation
-            backgroundColor: "transparent"
-
-            ValueAxis
+            property var triggerData: []
+            delegate: ItemDelegate
             {
-                id: axis_y
-                min: 0
-                max: 1
-                gridVisible: false
-                color: "#ffffff"
-                visible: false
-            }
+                id: control
+                width: combo.width
+                text: item.name
+                highlighted: (combo.currentIndex === index)
+                onClicked: {
+                    combo.displayText = text
+                    combo.triggerData = item.data
 
-            ValueAxis
-            {
-                id: axis_x
-                min: 0
-                max: testis.axisXCount
-                gridVisible: false
-                color: "#ffffff"
-                labelsColor: "#ffffff"
-                labelFormat: "%.0f"
-                visible: false
+                    crankWheelCanvas.requestPaint();
+                    crankPlotCanvas.requestPaint();
 
-            }
-
-            LineSeries
-            {
-                id: line_series_crank
-                name: "Crank"
-                color: crankGraphColor
-                axisX: axis_x
-                axisY: axis_y
-                width: 4
-                style: Qt.SolidLine
-            }
-
-            LineSeries
-            {
-                id: line_series_cam
-                name: "Cam"
-                color: camGraphColor
-                axisX: axis_x
-                axisY: axis_y
-                width: 4
-                style: Qt.SolidLine
-                //visible: false
-
-            }
-
-            Connections
-            {
-                target: testis
-                onUpdatePending:
-                {
-                    testis.updateCrankSamples(line_series_crank);
-                    testis.updateCamSamples(line_series_cam);
+                    camWheelCanvas.requestPaint();
+                    camPlotCanvas.requestPaint();
                 }
             }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.preferredHeight: 3
+
+            Canvas {
+                id: crankWheelCanvas
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.preferredWidth: 1
+
+                clip: true
+                onPaint: {
+                    drawTriggerWheel(
+                                getContext("2d"),
+                                width,
+                                height,
+                                combo.triggerData,
+                                "crank"
+                                );
+                }
+            }
+            Canvas {
+                id: camWheelCanvas
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.preferredWidth: 1
+                clip: true
+                onPaint: {
+                    drawTriggerWheel(
+                                getContext("2d"),
+                                width,
+                                height,
+                                combo.triggerData,
+                                "cam"
+                                );
+                }
+            }
+        }
+
+
+        Canvas {
+            id: crankPlotCanvas
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.preferredHeight: 1
+            clip: true
+            onPaint: {
+                plotPattern(
+                            getContext("2d"),
+                            width,
+                            height,
+                            combo.triggerData,
+                            "crank"
+                            );
+            }
+        }
+
+        Canvas {
+            id: camPlotCanvas
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.preferredHeight: 1
+            clip: true
+            onPaint: {
+                plotPattern(
+                            getContext("2d"),
+                            width,
+                            height,
+                            combo.triggerData,
+                            "cam"
+                            );
+            }
+        }
+    }
+
+    // gearWheelType = "crank" | "cam"
+    function plotPattern(context, width, height, data, wheelType)
+    {
+        context.reset();
+        context.lineWidth = 2;
+
+        var pulseWidth = width / data.length;
+        var y = height
+        var x = 0;
+
+        let lastHigh = false
+        let nextHigh = false
+        context.beginPath();
+        for(let i = 0; i < data.length; ++i++)
+        {
+            let high = (wheelType === "crank") ? (data[i] & 0x01) :  ((data[i] >> 1) & 0x01);
+
+            if ((i + 1) < data.length) {
+                nextHigh = (wheelType === "crank") ? (data[i+1] & 0x01) : ((data[i + 1] >> 1) & 0x01);
+            }
+
+            if (i === 0) {
+                context.moveTo(x, y);
+            }
+
+            if (high)
+            {
+                if (!lastHigh) {
+                    context.lineTo(x, y - y);
+
+                }
+
+                context.lineTo(x + pulseWidth, y - y);
+
+                if (!nextHigh) {
+                    context.lineTo(x + pulseWidth, y)
+                }
+            }
+            else {
+                context.lineTo(x + pulseWidth, y)
+            }
+
+            x += pulseWidth
+            lastHigh = high
+        }
+        //context.closePath();
+        context.strokeStyle = (wheelType === "crank") ? Material.accent : Material.color(Material.Teal)
+        context.stroke();
+    }
+
+    // gearWheelType = "crank" | "cam"
+    function drawTriggerWheel(context, width, height, data, wheelType)
+    {
+        context.reset();
+        context.lineWidth = 2;
+
+        // Center of trigger wheel
+        var centerX = width / 2
+        var centerY = height / 2;
+
+        // Radius of the trigger wheel. By default crank wheel is drawn bigger than cam wheel
+        var radius = (Math.min(width, height) / 2) * 0.8
+
+        // Count of tooths, either low or high
+        var arcsCount = data.length;
+
+        if (wheelType === "crank") {
+            radius =  Math.min(width, height) / 2;
+            //
+            for (var i = 0; i < data.length; ++i) {
+                // If there is a tooth on the cam wheel,
+                // available trigger data is represented 720 rotation degrees,
+                // so crank tooths should be devided by 2 (360 rotation degrees)
+                if (data[i] > 1) {
+                    arcsCount = arcsCount / 2;
+                    break;
+                }
+            }
+        }
+
+        // Degrees per single edge/arc
+        var arcDegrees =  360 / arcsCount
+
+        // Radians per single edge
+        var arcRadians = arcDegrees * (Math.PI/180);
+
+        //********* Draw the Trigger Wheel *********//
+        // Start & end points of an arc in radians
+        var arcStart = 0;
+        var arcEnd = arcRadians;
+
+        context.beginPath();
+        for (let i = 0; i < arcsCount; i++)
+        {
+            let high = (wheelType === "crank") ? (data[i] & 0x01) :  ((data[i] >> 1) & 0x01);
+
+            if (high) {
+                context.arc(centerX, centerY, radius, arcStart + (arcRadians * 0.1), arcEnd - (arcRadians * 0.1), false);
+            }
+            else {
+                context.arc(centerX, centerY, radius * 0.89, arcStart, arcEnd, false);
+            }
+
+            arcStart += arcRadians;
+            arcEnd   += arcRadians;
+        }
+        context.closePath();
+        context.strokeStyle = (wheelType === "crank") ? Material.accent : Material.color(Material.Teal)
+        context.stroke();
+
+        // Fill with semi-transparent color
+        context.globalAlpha = 0.3;
+        context.fillStyle = (wheelType === "crank") ? Material.accent : Material.color(Material.Teal)
+        context.fill();
+        context.globalAlpha = 1;
+
+        if (arcsCount > 0) {
+            // Cut out space for trigger wheel center hole
+            context.globalCompositeOperation = 'destination-out';
+            context.beginPath();
+            context.arc(centerX, centerY, radius * 0.15, 0, 2 * Math.PI, false);
+            context.closePath();
+            context.fill();
+            context.globalCompositeOperation = 'source-over';
+
+            // Draw trigger wheel center hole
+            context.beginPath();
+            context.arc(centerX, centerY, radius * 0.15, 0, 2 * Math.PI, false);
+            context.closePath();
+            context.strokeStyle = (wheelType === "crank") ? Material.accent : Material.color(Material.Teal)
+            context.stroke();
         }
     }
 }

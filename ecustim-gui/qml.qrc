@@ -15,5 +15,8 @@
         <file>SwitchableInputsView.qml</file>
         <file>CollapsableGroupBox.qml</file>
         <file>RemoteDeviceDelegate.qml</file>
+        <file>AnimatedButton.qml</file>
+        <file>InputsOutputsEditView.qml</file>
+        <file>InputsOutputsDelegate.qml</file>
     </qresource>
 </RCC>

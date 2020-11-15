@@ -9,101 +9,99 @@ import '.'
 Item
 {
     id: root
-    implicitHeight: pane.implicitHeight
+    implicitHeight: 150
 
     property string caption: ""
     property real setValue: 0
+    property string valueUnits: "\u03A9"
     property real actualValue: 0
+    property real i2cAddress: 0xFF
 
-    Pane
+    ColumnLayout
     {
-        id: pane
         anchors.fill: parent
-        padding: 4
-        implicitHeight: 100
-        Material.background: Style.color.foreground
-        Material.elevation: 10
-
-        ColumnLayout
+        spacing: 0
+        // Set output value placeholder
+        Item
         {
-            anchors.fill: parent
-            spacing: 0
-
+            Layout.fillWidth: true
+            Layout.preferredHeight: labelValue.height
+            //Layout.topMargin: 5
+            Layout.bottomMargin: 3
+            // Set output value reading
             Label
             {
-                id: value
-
-                Layout.fillWidth: true
-                Layout.preferredHeight: contentHeight
-                Layout.topMargin: 5
-                Layout.bottomMargin: 5
-
-                text: slider.value + "%"
-                font.pixelSize: 16
-
+                id: labelValue
+                anchors.centerIn: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
+                text: sliderSetValue.value.toFixed(0)
+                // 20% bigger than default font
+                font.pointSize: labelValueUnit.font.pointSize * 1.2
             }
-
-            RowLayout
+            // Set output value unit
+            Label
             {
+                id: labelValueUnit
+                anchors.left: labelValue.right
+                anchors.bottom: labelValue.bottom
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                text: " " + valueUnits
+            }
+        }
+        // Set output value slider placeholder
+        RowLayout
+        {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            spacing: 0
+
+            Slider {
+                id: sliderSetValue
                 Layout.fillHeight: true
                 Layout.fillWidth: true
 
-                Slider
-                {
-                    id: slider
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-
-                    from: 0
-                    to: 100
-                    stepSize: 1
-                    orientation: Qt.Vertical
-                    ToolTip.delay: 1500
-                    ToolTip.timeout: 3000
-                    ToolTip.visible: hovered && !pressed
-                    ToolTip.text: "Preset value"
-                    onValueChanged:
-                    {
-                        setValue = slider.value
-                    }
-
-                }
-
-                Slider
-                {
-                    id: progress
-                    enabled: false
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-
-                    handle:Item{}
-                    from: slider.from
-                    to: slider.to
-                    stepSize: slider.stepSize
-                    orientation: Qt.Vertical
-                    ToolTip.delay: 1500
-                    ToolTip.timeout: 3000
-                    ToolTip.visible: hovered && !pressed
-                    ToolTip.text: "Actual value"
-                    value: actualValue
-                }
+                from: 0
+                to: 111
+                stepSize: 1
+                orientation: Qt.Vertical
+                onValueChanged: setValue = value
             }
 
-            Label
-            {
-                id: type
-                Layout.fillWidth: true
-                Layout.preferredHeight: contentHeight
-                Layout.topMargin: 5
-                Layout.bottomMargin: 5
+            //            Slider
+            //            {
+            //                id: sliderReadValue
+            //                enabled: false
+            //                Layout.fillHeight: true
+            //                Layout.fillWidth: true
 
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+            //                handle:Item{}
+            //                from: sliderSetValue.from
+            //                to: sliderSetValue.to
+            //                stepSize: sliderSetValue.stepSize
+            //                orientation: Qt.Vertical
+            //                ToolTip.delay: 1500
+            //                ToolTip.timeout: 3000
+            //                ToolTip.visible: hovered && !pressed
+            //                ToolTip.text: "Actual value"
+            //                value: actualValue
+            //            }
 
-                text: caption
-            }
+        }
+        // Caption (name) of the output value
+        Label
+        {
+            id: labelCaption
+            Layout.fillWidth: true
+            Layout.preferredHeight: implicitHeight
+            Layout.topMargin: 5
+            Layout.bottomMargin: 5
+
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+
+            text: caption
         }
     }
 }

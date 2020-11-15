@@ -11,21 +11,22 @@ Item
 
     ScrollView
     {
-        ScrollBar.vertical.interactive: true
-
         anchors.fill: parent
-        clip: true
         contentHeight: Math.max(root.height,
                                 columnLayout.anchors.topMargin +
                                 columnLayout.anchors.bottomMargin +
                                 columnLayout.implicitHeight)
+        clip: true
+        ScrollBar.vertical.interactive: true
+
         ColumnLayout
         {
             id: columnLayout
-            anchors.margins:  5
             anchors.fill: parent
+            anchors.leftMargin: 5
+            anchors.rightMargin: 5
             spacing: 5
-
+            // Variable outputs (i2c potentiometers)
             VariableOutputsView
             {
                 id: variableOutputsView
@@ -35,7 +36,7 @@ Item
 
                 model: io.voModel
             }
-
+            // Switchable outputs (on/off)
             SwitchableOutputsView
             {
                 id: switchableOutputsView
@@ -44,7 +45,7 @@ Item
 
                 model: io.soModel
             }
-
+            // Switchable inputs (on/off)
             SwitchableInputsView
             {
                 id: switchableInputsView
@@ -53,7 +54,7 @@ Item
 
                 model: io.siModel
             }
-
+            // Dummy spaces
             Item
             {
                 id: spacer

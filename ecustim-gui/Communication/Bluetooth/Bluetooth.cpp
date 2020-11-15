@@ -1,6 +1,8 @@
 #include "Bluetooth.h"
 #include <QDebug>
 #include <QThread>
+#include <QCoreApplication>
+
 
 #define DEBUG_LOG
 
@@ -20,6 +22,7 @@ Bluetooth::~Bluetooth()
 #ifdef DEBUG_LOG
     qDebug() << endl << __PRETTY_FUNCTION__;
 #endif
+    stopRemoteDeviceDiscovery();
     disconnect();
 }
 
@@ -29,25 +32,25 @@ void Bluetooth::initialize()
     if (isValid())
     {
         // Stop any active discovery
-        discoveryStop();
+        stopRemoteDeviceDiscovery();
 
         // Close any active connection
         disconnect();
 
         // Socket instance
         QObject::connect(socket.data(), &QBluetoothSocket::readyRead, this, &Bluetooth::onSocketReadyRead, Qt::UniqueConnection);
-        QObject::connect(socket.data(), &QBluetoothSocket::connected, this, &Bluetooth::onSocketConnected, Qt::UniqueConnection);
-        QObject::connect(socket.data(), &QBluetoothSocket::disconnected, this, &Bluetooth::onSocketDisconnected, Qt::UniqueConnection);
         QObject::connect(socket.data(), &QBluetoothSocket::stateChanged, this, &Bluetooth::onSocketStateChanged, Qt::UniqueConnection);
         QObject::connect(socket.data(), QOverload<QBluetoothSocket::SocketError>::of(&QBluetoothSocket::error), this, &Bluetooth::onSocketError, Qt::UniqueConnection);
 
         // Setup local device
         QObject::connect(localDevice.data(), &QBluetoothLocalDevice::hostModeStateChanged, this, &Bluetooth::onHostModeStateChanged, Qt::UniqueConnection);
+        QObject::connect(localDevice.data(), &QBluetoothLocalDevice::deviceConnected, this, &Bluetooth::onDeviceConnected, Qt::UniqueConnection);
+        QObject::connect(localDevice.data(), &QBluetoothLocalDevice::deviceDisconnected, this, &Bluetooth::onDeviceDisconnected, Qt::UniqueConnection);
         localDevice->powerOn();
         localDevice->setHostMode(QBluetoothLocalDevice::HostDiscoverable);
 
         // Setup device discovery
-        discoveryInitialize();
+        initializeRemoteDeviceDiscovery();
     }
 }
 
@@ -66,11 +69,11 @@ void Bluetooth::connect(const QString& connectionInfo)
     if (isValid())
     {
 #ifdef DEBUG_LOG
-    qDebug() << endl << __PRETTY_FUNCTION__;
-    qDebug() << "Address:" << qPrintable(connectionInfo);
+        qDebug() << endl << __PRETTY_FUNCTION__;
+        qDebug() << "Device address:" << qPrintable(connectionInfo);
 #endif
         // Stop any active discovery
-        discoveryStop();
+        stopRemoteDeviceDiscovery();
 
         // If has previous connection, disconnect
         disconnect();
@@ -90,6 +93,9 @@ void Bluetooth::disconnect()
     {
         // Try disconnecting gracefully
         socket->disconnectFromService();
+        // Warning the code below blocks qt event loop
+        return;
+
 
         // Wait for socket state
         int retries = RETRIES_MAX_COUNT;
@@ -125,14 +131,54 @@ bool Bluetooth::isConnected() const
     return (isValid() && !socket.isNull() && socket->isOpen());
 }
 
-// Get currently available remote devices
-void Bluetooth::getRemoteDevices()
+// Start discovering currently available remote devices
+void Bluetooth::startRemoteDeviceDiscovery()
 {
     if (isValid())
     {
-        // Restart discovery
-        discoveryStop();
-        discoveryStart();
+#ifdef DEBUG_LOG
+        qDebug() << endl << __PRETTY_FUNCTION__;
+#endif
+
+        // Start device discovery
+        if (!deviceAgent.isNull() && DISCOVERY_TYPE_DEVICE == discoveryType)
+        {
+            if (deviceAgent->isActive())
+            {
+                deviceAgent->stop();
+            }
+            deviceAgent->start();
+        }
+        // Start service discovery
+        else if (!serviceAgent.isNull() && DISCOVERY_TYPE_SERVICE == discoveryType)
+        {
+            if (serviceAgent->isActive())
+            {
+                serviceAgent->stop();
+            }
+            serviceAgent->start(QBluetoothServiceDiscoveryAgent::FullDiscovery);
+        }
+        // Problem! There is no available discovery agent
+        else
+        {
+            emit remoteDeviceDiscoveryFinished();
+        }
+    }
+}
+
+// Stop discovering currently available remote devices
+void Bluetooth::stopRemoteDeviceDiscovery()
+{
+    // Stop device discovery, if active
+    if (!deviceAgent.isNull() && deviceAgent->isActive())
+    {
+        deviceAgent->stop();
+    }
+
+    // Stop service discovery, if active
+    if (!serviceAgent.isNull() && serviceAgent->isActive())
+    {
+        serviceAgent->stop();
     }
 }
 
@@ -148,7 +194,7 @@ void Bluetooth::send(const QByteArray& bytes)
 
 }
 
-void Bluetooth::discoveryInitialize()
+void Bluetooth::initializeRemoteDeviceDiscovery()
 {
     if (!isValid()) return;
 
@@ -162,40 +208,10 @@ void Bluetooth::discoveryInitialize()
     // Setup service discovery
     else if (DISCOVERY_TYPE_SERVICE == discoveryType)
     {
-        serviceAgent.reset(new QBluetoothServiceDiscoveryAgent(localDevice->address(), this));
         serviceAgent->setUuidFilter(QBluetoothUuid::SerialPort);
         QObject::connect(serviceAgent.data(), &QBluetoothServiceDiscoveryAgent::serviceDiscovered, this, &Bluetooth::onServiceDiscovered, Qt::UniqueConnection);
         QObject::connect(serviceAgent.data(), &QBluetoothServiceDiscoveryAgent::finished, this, &Bluetooth::onServiceDiscoveryFinished, Qt::UniqueConnection);
         QObject::connect(serviceAgent.data(), &QBluetoothServiceDiscoveryAgent::canceled, this, &Bluetooth::onServiceDiscoveryFinished, Qt::UniqueConnection);
-    }
-}
-
-void Bluetooth::discoveryStart()
-{
-    // Start device discovery
-    if (!deviceAgent.isNull() && DISCOVERY_TYPE_DEVICE == discoveryType)
-    {
-        deviceAgent->start();
-    }
-    // Start service discovery
-    else if (!serviceAgent.isNull() && DISCOVERY_TYPE_SERVICE == discoveryType)
-    {
-        serviceAgent->start(QBluetoothServiceDiscoveryAgent::FullDiscovery);
-    }
-}
-
-void Bluetooth::discoveryStop()
-{
-    // Stop device discovery, if active
-    if (!deviceAgent.isNull() && deviceAgent->isActive())
-    {
-        deviceAgent->stop();
-    }
-
-    // Stop service discovery, if active
-    if (!serviceAgent.isNull() && serviceAgent->isActive())
-    {
-        serviceAgent->stop();
     }
 }
 
@@ -218,10 +234,6 @@ void Bluetooth::onServiceDiscovered(const QBluetoothServiceInfo &info)
 
 void Bluetooth::onServiceDiscoveryFinished()
 {
-#ifdef DEBUG_LOG
-    qDebug() << endl << __PRETTY_FUNCTION__;
-#endif
-
     emit remoteDeviceDiscoveryFinished();
 }
 
@@ -242,11 +254,27 @@ void Bluetooth::onDeviceDiscovered(const QBluetoothDeviceInfo &info)
 
 void Bluetooth::onDeviceDiscoveryFinished()
 {
+    emit remoteDeviceDiscoveryFinished();
+}
+
+void Bluetooth::onDeviceConnected(QBluetoothAddress address)
+{
 #ifdef DEBUG_LOG
     qDebug() << endl << __PRETTY_FUNCTION__;
+    qDebug() << "Device address:" << qPrintable(address.toString());
 #endif
 
-    emit remoteDeviceDiscoveryFinished();
+    emit remoteDeviceConnected(address.toString());
+}
+
+void Bluetooth::onDeviceDisconnected(QBluetoothAddress address)
+{
+#ifdef DEBUG_LOG
+    qDebug() << endl << __PRETTY_FUNCTION__;
+    qDebug() << "Device address:" << qPrintable(address.toString());
+#endif
+
+    emit remoteDeviceDisconnected(address.toString());
 }
 
 QSharedPointer<RemoteDeviceItem> Bluetooth::processRemoteDeviceInfo(const QBluetoothServiceInfo &serviceInfo)
@@ -303,6 +331,12 @@ QSharedPointer<RemoteDeviceItem> Bluetooth::processRemoteDeviceInfo(const QBluet
 
     item->setAdditionalInfo(additionalInfo);
 
+    // If there is already a connection to this device
+    if (!socket.isNull() && socket->state() == QBluetoothSocket::ConnectedState && socket->peerAddress() == deviceInfo.address())
+    {
+        item->setConnectionState(RemoteDeviceItem::CONNECTED);
+    }
+
     return item;
 }
 
@@ -311,20 +345,6 @@ void Bluetooth::onHostModeStateChanged(QBluetoothLocalDevice::HostMode mode)
 #ifdef DEBUG_LOG
     qDebug() << endl << __PRETTY_FUNCTION__;
     qDebug() << mode;
-#endif
-}
-
-void Bluetooth::onSocketConnected()
-{
-#ifdef DEBUG_LOG
-    qDebug() << endl << __PRETTY_FUNCTION__;
-#endif
-}
-
-void Bluetooth::onSocketDisconnected()
-{
-#ifdef DEBUG_LOG
-    qDebug() << endl << __PRETTY_FUNCTION__;
 #endif
 }
 
@@ -346,6 +366,18 @@ void Bluetooth::onSocketStateChanged(QBluetoothSocket::SocketState state)
     qDebug() << endl << __PRETTY_FUNCTION__;
     qDebug() << state;
 #endif
+
+    //    switch (state) {
+    //    case QBluetoothSocket::UnconnectedState:
+    //    case QBluetoothSocket::ConnectedState:
+    //    case QBluetoothSocket::ConnectingState:
+    //    case QBluetoothSocket::ServiceLookupState:
+    //    case QBluetoothSocket::BoundState:
+    //    case QBluetoothSocket::ClosingState:
+    //    case QBluetoothSocket::ListeningState:
+    //    default:
+    //        break;
+    //    }
 }
 
 void Bluetooth::onSocketError(QBluetoothSocket::SocketError error)

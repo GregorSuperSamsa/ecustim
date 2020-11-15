@@ -1,17 +1,16 @@
 #include "IOItem.h"
 
 
-Item::Item(QObject *parent):QObject(parent)
+IOItem::IOItem(QObject *parent) : QObject(parent)
 {
-
 }
 
-int Item::setValue() const
+int IOItem::setValue() const
 {
     return setValue_;
 }
 
-void Item::setSetValue(int setValue)
+void IOItem::setSetValue(int setValue)
 {
     if (setValue == setValue_) return;
     setValue_ = setValue;
@@ -23,12 +22,12 @@ void Item::setSetValue(int setValue)
 }
 
 //
-int Item::actualValue() const
+int IOItem::actualValue() const
 {
     return actualValue_;
 }
 
-void Item::setActualValue(int actualValue)
+void IOItem::setActualValue(int actualValue)
 {
     if (actualValue == actualValue_) return;
     actualValue_ = actualValue;
@@ -36,12 +35,12 @@ void Item::setActualValue(int actualValue)
 }
 
 //
-int Item::address() const
+int IOItem::address() const
 {
     return address_;
 }
 
-void Item::setAddress(int address)
+void IOItem::setAddress(int address)
 {
     if (address == address_) return;
     address_ = address;
@@ -49,24 +48,24 @@ void Item::setAddress(int address)
 }
 
 //
-bool Item::active() const
+bool IOItem::active() const
 {
     return active_;
 }
 
-void Item::setActive(bool active)
+void IOItem::setActive(bool active)
 {
     if (active == active_) return;
     active_ = active;
     emit activeChanged(active);
 }
 //
-QString Item::description() const
+QString IOItem::description() const
 {
     return description_;
 }
 
-void Item::setDescription(QString description)
+void IOItem::setDescription(QString description)
 {
     if (description == description_) return;
     description_ = description;

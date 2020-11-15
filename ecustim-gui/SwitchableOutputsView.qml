@@ -16,7 +16,8 @@ Item
     {
         id: groupBox
         anchors.fill: parent
-        hasBackground: true
+        //hasBackground: true
+        hasBackground: false
         title: "Switchable Outputs"
 
         content: Flow

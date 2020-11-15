@@ -25,16 +25,23 @@ public:
     // Check whether we are currently connected to a remote device
     virtual bool isConnected() const = 0;
 
-    // Get currently available remote devices
-    virtual void getRemoteDevices() = 0;
+    // Start discovering currently available remote devices
+    virtual void startRemoteDeviceDiscovery() = 0;
+
+    // Stop discovering currently available remote devices
+    virtual void stopRemoteDeviceDiscovery() = 0;
 
     // Send raw data to the remote device
     virtual void send(const QByteArray& bytes) = 0;
 
 signals:
+    // Discovery state
     void remoteDeviceDiscovered(QSharedPointer<RemoteDeviceItem>);
     void remoteDeviceDiscoveryFinished();
-    void connectionStatus(bool isConnected);
+    // Connection state
+    void remoteDeviceConnected(QString connectionInfo);
+    void remoteDeviceDisconnected(QString connectionInfo);
+
 
 };
 

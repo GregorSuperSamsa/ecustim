@@ -7,12 +7,9 @@
 
 CommunicationManager::CommunicationManager(QObject *parent) : QObject(parent),
     models(CONNECTION_TYPE_COUNT)
-  //model(new Model())
 {
     // TODO: Last used communication type should be read from user settings
     setConnectionType(USB_UART);
-
-    setConnectionStatus(IDLE);
 }
 
 void CommunicationManager::send(const QByteArray& data)
@@ -23,7 +20,6 @@ void CommunicationManager::send(const QByteArray& data)
 Model *CommunicationManager::remoteDeviceModel() const
 {
     return models.at(connectionType()).data();
-    //return  model.data();
 }
 
 void CommunicationManager::connect(const QString& connectionInfo)
@@ -34,6 +30,15 @@ void CommunicationManager::connect(const QString& connectionInfo)
 #endif
 
     communicator->connect(connectionInfo);
+}
+
+void CommunicationManager::disconnect()
+{
+#ifdef DEBUG_LOG
+    qDebug() << endl << __PRETTY_FUNCTION__;
+#endif
+
+    communicator->disconnect();
 }
 
 CommunicationManager::CONNECTION_TYPE CommunicationManager::connectionType() const
@@ -70,47 +75,86 @@ void CommunicationManager::setConnectionType(CONNECTION_TYPE connectionType)
 
     //
     communicator->initialize();
-    QObject::connect(communicator.data(), &Communication::remoteDeviceDiscovered, this, &CommunicationManager::onRemoteDeviceDiscovered, Qt::UniqueConnection);
-    QObject::connect(communicator.data(), &Communication::remoteDeviceDiscoveryFinished, this, &CommunicationManager::onRemoteDeviceDiscoveryFinished, Qt::UniqueConnection);
+    QObject::connect(communicator.data(), &Communication::remoteDeviceDiscovered, this, &CommunicationManager::onRemoteDeviceDiscovered, Qt::QueuedConnection);
+    QObject::connect(communicator.data(), &Communication::remoteDeviceDiscoveryFinished, this, &CommunicationManager::remoteDeviceDiscoveryFinished, Qt::QueuedConnection);
+    //
+    QObject::connect(communicator.data(), &Communication::remoteDeviceConnected, this, &CommunicationManager::onRemoteDeviceConnected, Qt::QueuedConnection);
+    QObject::connect(communicator.data(), &Communication::remoteDeviceDisconnected, this, &CommunicationManager::onRemoteDeviceDisconnected, Qt::QueuedConnection);
 }
 
-CommunicationManager::CONNECTION_STATUS CommunicationManager::connectionStatus() const
-{
-    return connectionStatus_;
-}
-
-void CommunicationManager::setConnectionStatus(CONNECTION_STATUS connectionStatus)
-{
-    if (connectionStatus_ == connectionStatus)
-        return;
-
-    connectionStatus_ = connectionStatus;
-    emit connectionStatusChanged(connectionStatus_);
-}
-
-void CommunicationManager::findDevices()
+void CommunicationManager::startRemoteDeviceDiscovery()
 {
 #ifdef DEBUG_LOG
     qDebug() << endl << __PRETTY_FUNCTION__;
-    qDebug() << connectionType();
 #endif
 
     // Remove previously found remote devices
     models.at(connectionType())->clearAll();
 
-    communicator->getRemoteDevices();
-    setConnectionStatus(DISCOVERY_STARTED);
+    communicator->startRemoteDeviceDiscovery();
+}
+
+void CommunicationManager::stopRemoteDeviceDiscovery()
+{
+#ifdef DEBUG_LOG
+    qDebug() << endl << __PRETTY_FUNCTION__;
+#endif
+
+    communicator->stopRemoteDeviceDiscovery();
 }
 
 void CommunicationManager::onRemoteDeviceDiscovered(QSharedPointer<RemoteDeviceItem> item)
 {
     if (item.isNull()) return;
 
-    //model->insert(item);
+//    QObject::connect(item.data(), &RemoteDeviceItem::connectionStateChanged, [=]()
+//    {
+//        if (item->connectionState() == RemoteDeviceItem::CONNECTING)
+//        {
+//            connect(item->connectionString());
+//        }
+//        else if (item->connectionState() == RemoteDeviceItem::DISCONNECTING)
+//        {
+//            disconnect();
+//        }
+//    });
+
     models.at(connectionType())->insert(item);
 }
 
-void CommunicationManager::onRemoteDeviceDiscoveryFinished()
+void CommunicationManager::onRemoteDeviceConnected(QString connectionInfo)
 {
-    setConnectionStatus(DISCOVERY_FINISHED);
+#ifdef DEBUG_LOG
+    qDebug() << endl << __PRETTY_FUNCTION__;
+    qDebug() << "Connection info:" << qPrintable(connectionInfo);
+#endif
+
+    for (int i = 0; i < models.at(connectionType())->count(); ++i)
+    {
+        auto remote = qSharedPointerDynamicCast<RemoteDeviceItem>(models.at(connectionType())->data(i));
+        if (!remote.isNull() && remote->connectionString() == connectionInfo)
+        {
+            remote->setConnectionState(RemoteDeviceItem::CONNECTED);
+        }
+    }
 }
+
+void CommunicationManager::onRemoteDeviceDisconnected(QString connectionInfo)
+{
+#ifdef DEBUG_LOG
+    qDebug() << endl << __PRETTY_FUNCTION__;
+    qDebug() << "Connection info:" << qPrintable(connectionInfo);
+#endif
+
+    for (int i = 0; i < models.at(connectionType())->count(); ++i)
+    {
+        auto remote = qSharedPointerDynamicCast<RemoteDeviceItem>(models.at(connectionType())->data(i));
+        if (!remote.isNull() && remote->connectionString() == connectionInfo)
+        {
+            remote->setConnectionState(RemoteDeviceItem::UNCONNECTED);
+            break;
+        }
+    }
+}
+
+

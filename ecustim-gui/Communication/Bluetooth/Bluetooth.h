@@ -32,8 +32,11 @@ public:
     // Check whether we are currently connected to a remote device
     bool isConnected() const;
 
-    // Get currently available remote devices
-    void getRemoteDevices();
+    // Start discovering currently available remote devices
+    void startRemoteDeviceDiscovery();
+
+    // Stop discovering currently available remote devices
+    void stopRemoteDeviceDiscovery();
 
     // Send raw data to the remote device
     void send(const QByteArray& bytes);
@@ -46,9 +49,7 @@ private:
     };
     static const DISCOVERY_TYPE discoveryType;
 
-    void discoveryInitialize();
-    void discoveryStart();
-    void discoveryStop();
+    void initializeRemoteDeviceDiscovery();
 
     QSharedPointer<RemoteDeviceItem> processRemoteDeviceInfo(const QBluetoothServiceInfo& serviceInfo);
     QSharedPointer<RemoteDeviceItem> processRemoteDeviceInfo(const QBluetoothDeviceInfo& deviceInfo);
@@ -66,10 +67,11 @@ private slots:
     void onDeviceDiscovered(const QBluetoothDeviceInfo& info);
     void onDeviceDiscoveryFinished();
     //
+    void onDeviceConnected(QBluetoothAddress address);
+    void onDeviceDisconnected(QBluetoothAddress address);
+    //
     void onHostModeStateChanged(QBluetoothLocalDevice::HostMode);
     //
-    void onSocketConnected();
-    void onSocketDisconnected();
     void onSocketReadyRead();
     void onSocketStateChanged(QBluetoothSocket::SocketState state);
     void onSocketError(QBluetoothSocket::SocketError);

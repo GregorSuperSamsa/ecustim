@@ -6,7 +6,7 @@
 #include <QQuickStyle>
 #include "Test.h"
 #include "Communication/CommunicationManager.h"
-#include "Hardware/TriggerGenerator.h"
+#include "Hardware/TriggerPattern/TriggerPatternManager.h"
 #include "Hardware/IO/IOManager.h"
 
 
@@ -28,29 +28,29 @@ int main(int argc, char *argv[])
 {
 
     //QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth* = true"));
-//#if defined (Q_OS_ANDROID)
-//    QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth* = true"));
-//#endif
+    //#if defined (Q_OS_ANDROID)
+    //    QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth* = true"));
+    //#endif
 
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
 
-//#if defined (Q_OS_ANDROID)
-//    //Request requiered permissions at runtime
-//    for(const QString &permission : permissions){
-//        auto result = QtAndroid::checkPermission(permission);
-//        if(result == QtAndroid::PermissionResult::Denied){
-//            auto resultHash = QtAndroid::requestPermissionsSync(QStringList({permission}));
-//            if(resultHash[permission] == QtAndroid::PermissionResult::Denied)
-//                return 0;
-//        }
-//    }
-//#endif
+    //#if defined (Q_OS_ANDROID)
+    //    //Request requiered permissions at runtime
+    //    for(const QString &permission : permissions){
+    //        auto result = QtAndroid::checkPermission(permission);
+    //        if(result == QtAndroid::PermissionResult::Denied){
+    //            auto resultHash = QtAndroid::requestPermissionsSync(QStringList({permission}));
+    //            if(resultHash[permission] == QtAndroid::PermissionResult::Denied)
+    //                return 0;
+    //        }
+    //    }
+    //#endif
 
 
     QSharedPointer<CommunicationManager> communicationManager(new CommunicationManager);
 
-    TriggerGenerator tg(communicationManager);
+    TriggerPatternManager tg(communicationManager);
 
     QSharedPointer<IO> io( new IO(communicationManager));
 
@@ -62,7 +62,6 @@ int main(int argc, char *argv[])
     test.show();
 #endif
 
-
     QQuickStyle::setStyle("Material");
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
@@ -73,12 +72,14 @@ int main(int argc, char *argv[])
     }
     , Qt::QueuedConnection);
 
-    // In order to expose ENUM type from CommunicationManager QObject
+    // To expose ENUM type from CommunicationManager QObject
     qmlRegisterUncreatableType<CommunicationManager>("CommunicationManager", 1, 0, "CommunicationManager", "");
-    //
+    // To expose ENUM type from RemoteDeviceItem QObject
+    qmlRegisterUncreatableType<RemoteDeviceItem>("RemoteDevice", 1, 0, "RemoteDevice", "");
+
     engine.rootContext()->setContextProperty("communicationManager", communicationManager.data());
     engine.rootContext()->setContextProperty("io", io.data());
-    engine.rootContext()->setContextProperty("testis", &tg);
+    engine.rootContext()->setContextProperty("triggerManager", &tg);
     engine.load(url);
 
     return app.exec();

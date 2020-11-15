@@ -45,7 +45,7 @@ void Test::onTimeout()
 {
     for (int i = 0; i < io->siModel()->count(); ++i)
     {
-        QSharedPointer<Item> item = qobject_cast<QSharedPointer<Item>>(io->siModel()->data(i));
+        QSharedPointer<IOItem> item = qobject_cast<QSharedPointer<IOItem>>(io->siModel()->data(i));
         if (!item.isNull())
         {
             if (item->actualValue() == 0)

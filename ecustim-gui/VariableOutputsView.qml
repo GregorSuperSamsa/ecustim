@@ -21,9 +21,9 @@ Item
 
         content: RowLayout
         {
-            anchors.margins: -11
+            //anchors.margins: -11
             anchors.fill: parent
-            spacing: 5
+            spacing: 0
 
             Repeater
             {

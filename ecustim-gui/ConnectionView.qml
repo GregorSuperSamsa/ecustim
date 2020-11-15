@@ -12,50 +12,48 @@ Item
     ColumnLayout
     {
         anchors.fill: parent
-        anchors.leftMargin: 10
-        anchors.rightMargin: 10
+        spacing: 0
 
         RowLayout
         {
             id: rowLayout
-            Layout.alignment: Qt.AlignTop
-            Layout.fillWidth: true
-            spacing: 9
 
-            RadioButton
-            {
-                id: radioButtonBluetooth
-                //Layout.fillWidth: true
+            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredHeight: implicitHeight
+            Layout.fillWidth: true
+
+
+            spacing: 0
+
+            Label {
                 Layout.preferredWidth: implicitWidth
                 Layout.preferredHeight: implicitHeight
-                text: qsTr("Bluetooth")
-                checked: communicationManager.connectionType === CommunicationManager.BLUETOOTH
-                onClicked:
-                {
-                    list.clearSelection()
-                    communicationManager.setConnectionType(CommunicationManager.BLUETOOTH);
-                }
+                id: connectionTypeLabel
+                text: qsTr("Connection type")
             }
 
             RadioButton
             {
                 id: radioButtonUsbUart
-                //Layout.fillWidth: true
                 Layout.preferredWidth: implicitWidth
                 Layout.preferredHeight: implicitHeight
-                text: qsTr("USB UART")
+                text: qsTr("USB")
                 checked: communicationManager.connectionType === CommunicationManager.USB_UART
-                onClicked:
-                {
-                    list.clearSelection()
+                onClicked: {
                     communicationManager.setConnectionType(CommunicationManager.USB_UART);
                 }
             }
 
-            Item
+            RadioButton
             {
-                Layout.fillWidth: true
-
+                id: radioButtonBluetooth
+                Layout.preferredWidth: implicitWidth
+                Layout.preferredHeight: implicitHeight
+                text: qsTr("Bluetooth")
+                checked: communicationManager.connectionType === CommunicationManager.BLUETOOTH
+                onClicked: {
+                    communicationManager.setConnectionType(CommunicationManager.BLUETOOTH);
+                }
             }
         }
 
@@ -79,45 +77,36 @@ Item
             }
         }
 
-        BusyIndicator
+        Button
         {
-            id: busy
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            Layout.preferredWidth: implicitWidth
-            Layout.preferredHeight: running ? implicitHeight : 0
-            running: (communicationManager.connectionStatus === CommunicationManager.DISCOVERY_STARTED)
-        }
+            id: buttonStartStopDiscovery
 
-        RowLayout
-        {
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
+            property string startDiscoveryText: "Start discovery"
+            property string stopDiscoveryText:  "Stop discovery"
+            property bool startDiscovery : true
+
             Layout.fillWidth: true
-            Layout.preferredHeight:  contentItem.implicitHeight
+            Layout.preferredHeight: implicitHeight
+            Layout.alignment: Qt.AlignBottom
+            Material.elevation: 1
 
-            Button
+            text: startDiscovery ? startDiscoveryText : stopDiscoveryText
+            onClicked:
             {
-                id: buttonFind
-                Layout.fillWidth: true
-                Layout.preferredHeight: implicitHeight
-                text: "Find"
-                onClicked:
+                if (startDiscovery)
                 {
-                    list.clearSelection()
-                    communicationManager.findDevices()
+                    list.clearSelection();
+                    communicationManager.disconnect();
+                    communicationManager.startRemoteDeviceDiscovery();
                 }
+                else
+                {
+                    communicationManager.stopRemoteDeviceDiscovery();
+                }
+                startDiscovery = !startDiscovery;
             }
 
-            Button
-            {
-                Layout.fillWidth: true
-                Layout.preferredHeight: implicitHeight
-                id: buttonConnect
-                text: "Connect"
-                onClicked:
-                    communicationManager.connect(remoteDeviceDelegate.connectionString)
-            }
         }
-
     }
 
     RemoteDeviceDelegate
@@ -128,9 +117,8 @@ Item
     Connections
     {
         target: communicationManager
-        onConnectionStatusChanged:
-        {
-           //
+        onRemoteDeviceDiscoveryFinished: {
+            buttonStartStopDiscovery.startDiscovery = true;
         }
     }
 }

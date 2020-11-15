@@ -15,131 +15,189 @@ ApplicationWindow
     Material.theme: Material.Dark
     Material.accent: Material.DeepOrange
 
-    ListModel
-    {
-        id: menuModel
-        ListElement { title: "Trigger pattern"; index: 0; iconSource: "file:/trigger-wheel-1.png"}
-        ListElement { title: "Sensors"; index: 1; iconSource: "file:/rpm.png" }
-        ListElement { title: "Communication"; index: 2; iconSource: "file:/uart.png" }
-    }
 
-    RowLayout
+    ColumnLayout
     {
         anchors.fill: parent
-        spacing: 5
-        Rectangle
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
+        spacing: 0
+
+        RowLayout
         {
-            id: menuPanel
-            Layout.preferredWidth: 60
-            Layout.fillHeight: true
-            color: root.color
+            id: menu
+            spacing: 0
+            Layout.fillWidth: true
+            //Layout.preferredWidth: implicitWidth
+            Layout.preferredHeight: implicitHeight
+            Layout.alignment: Qt.AlignCenter
 
-            ListView
+            RoundButton
             {
-                id: menu
-                anchors.fill: parent
-                focus: true
+                id: buttonTrigger
+                property int stackIndex: 0
+                //Layout.preferredWidth: implicitWidth
+                Layout.preferredHeight: implicitHeight
+                flat: true
+                icon.source: "qrc:/settings-black-24dp.svg"
+                //icon.width: 36
+                // icon.height: 36
+                icon.color: Material.foreground
+                radius: 3
 
-                highlightFollowsCurrentItem: true
-                highlightMoveDuration: 250
-
-                //KeyNavigation.right: control
-                keyNavigationWraps: true
-                model: menuModel
-                delegate: TabButton
-                {
-
-                    hoverEnabled: true
-
-                    ToolTip.delay: 1500
-                    ToolTip.timeout: 3000
-                    ToolTip.visible: hovered
-                    ToolTip.text: title
-                    width: parent.width
-                    height: menuPanel.height / menu.count
-                    font.pixelSize: 14
-                    //text: title
-                    icon.source: iconSource
-                    onClicked:
-                    {
-                        stack.currentIndex = index;
-                    }
-                    onCheckedChanged:
-                    {
-                        if (checked)
-                        {
-                            icon.width = icon.width  - 6
-                            icon.color = Style.color.foreground
-                            b.color = "transparent"//Style.color.background
-                            shadow.enabled = false
-                            shadow.visible = false
-                        }
-                        else {
-
-                            icon.width = icon.width  + 6
-
-                            icon.color = Style.color.background
-                            b.color = Style.color.foreground
-                            shadow.enabled = true
-                            shadow.visible = true
-                        }
-                    }
-
-                    background: Rectangle
-                    {
-                        id: b
-                        anchors.fill: parent
-                        color: Style.color.foreground
-                    }
-
-                    DropShadow
-                    {
-                        id: shadow
-                        enabled: true//shadowEnabled
-                        visible: true//shadowEnabled
-                        anchors.fill: b
-                        horizontalOffset: 2
-                        verticalOffset: 2
-                        radius: 8.0
-                        samples: 17
-                        color: "#80000000"
-                        source: b
-                    }
+                text: "Trigger patterns"
+display: AbstractButton.TextBesideIcon
+                onClicked: {
+                    menu.toggleButton(stackIndex)
                 }
             }
-        }
 
+            RoundButton
+            {
+                id: buttonVariableIO
+                property int stackIndex: 1
+//                Layout.minimumWidth: icon.width
+//                Layout.preferredWidth: implicitWidth
+                Layout.preferredHeight: implicitHeight
+                flat: true
+                icon.source: "qrc:/compare_arrows-black-24dp.svg"
+                //icon.width: 36
+                //icon.height: 36
+                icon.color: Material.foreground
+                text: "IO"
+                display: AbstractButton.TextBesideIcon
+                radius: 3
+                onClicked: {
+                    menu.toggleButton(stackIndex)
+                }
+            }
+
+            RoundButton {
+                id: buttonVariableIOSettings
+                property int stackIndex: 2
+//                Layout.minimumWidth: icon.width
+//                Layout.preferredWidth: implicitWidth
+                Layout.preferredHeight: implicitHeight
+                flat: true
+                icon.source: "qrc:/build-black-24dp.svg"
+                //icon.width: 36
+                //icon.height: 36
+                icon.color: Material.foreground
+                radius: 3
+                text: "IO Settings"
+                display: AbstractButton.TextBesideIcon
+                onClicked: {
+                    menu.toggleButton(stackIndex)
+                }
+            }
+
+            RoundButton {
+                id: buttonConnection
+                property int stackIndex: 3
+//               Layout.minimumWidth: icon.width
+//                Layout.preferredWidth: implicitWidth
+                Layout.preferredHeight: implicitHeight
+                flat: true
+                icon.source: "qrc:/link-black-24dp.svg"
+                //icon.width: 36
+                //icon.height: 36
+                icon.color: Material.foreground
+                radius: 3
+                text: "Connection"
+                display: AbstractButton.TextBesideIcon
+                onClicked: {
+                    menu.toggleButton(stackIndex)
+                }
+            }
+
+            function toggleButton(selectedStackIndex)
+            {
+                //
+                if (buttonTrigger.stackIndex === selectedStackIndex) {
+                    //buttonTrigger.icon.width = 48
+                    //buttonTrigger.icon.height = 48
+                    buttonTrigger.icon.color = Material.accent
+                }
+                else {
+                    //buttonTrigger.icon.width = 36
+                    //buttonTrigger.icon.height = 36
+                    buttonTrigger.icon.color = Material.foreground
+                }
+                //
+                if (buttonVariableIO.stackIndex === selectedStackIndex) {
+                    //buttonVariableIO.icon.width = 48
+                    //buttonVariableIO.icon.height = 48
+                    buttonVariableIO.icon.color = Material.accent
+                }
+                else {
+                    //buttonVariableIO.icon.width = 36
+                    //buttonVariableIO.icon.height = 36
+                    buttonVariableIO.icon.color = Material.foreground
+                }
+                //
+                if (buttonVariableIOSettings.stackIndex === selectedStackIndex) {
+                    //buttonVariableIOSettings.icon.width = 48
+                    //buttonVariableIOSettings.icon.height = 48
+                    buttonVariableIOSettings.icon.color = Material.accent
+                }
+                else {
+                    //buttonVariableIOSettings.icon.width = 36
+                    //buttonVariableIOSettings.icon.height = 36
+                    buttonVariableIOSettings.icon.color = Material.foreground
+                }
+                //
+                if (buttonConnection.stackIndex === selectedStackIndex) {
+                    //buttonConnection.icon.width = 48
+                    //buttonConnection.icon.height = 48
+                    buttonConnection.icon.color = Material.accent
+                }
+                else {
+                    //buttonConnection.icon.width = 36
+                    //buttonConnection.icon.height = 36
+                    buttonConnection.icon.color = Material.foreground
+                }
+                //
+                stack.currentIndex = selectedStackIndex
+            }
+        }
 
         StackLayout
         {
-            clip: true
             id: stack
-
-            Layout.fillHeight: true
             Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            clip: true
             currentIndex: 0
 
-            TriggerPatternView
-            {
-                Layout.alignment: Qt.AlignTop
-                Layout.fillHeight: true
+            // 1
+            TriggerPatternView {
+                property int stackIndex: 0
                 Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+            // 2
+            InputsOutputsView {
+                property int stackIndex: 1
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+            // 3
+            InputsOutputsEditView {
+                property int stackIndex: 2
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+            // 4
+            ConnectionView {
+                property int stackIndex: 3
+                Layout.fillWidth: true
+                Layout.fillHeight: true
             }
 
-            InputsOutputsView
-            {
-                id: inputsOutputsView
-                Layout.alignment: Qt.AlignTop
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-            }
-
-            ConnectionView
-            {
-                Layout.alignment: Qt.AlignTop
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-            }
         }
+
     }
+
 }

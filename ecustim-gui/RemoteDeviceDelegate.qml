@@ -3,16 +3,16 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.12
 import QtQuick.Controls.Material 2.3
 import QtQml.Models 2.2
-import '.'
+import QtGraphicalEffects 1.0
+import RemoteDevice 1.0
+//import '.'
 
 
-DelegateModel
-{
+DelegateModel {
 
     property int selectedIndex: -1
     property color selectedBackground:  Material.color(Material.Grey, Material.Shade700)
     property color idleBackground:      Style.color.foreground
-    property string connectionString: ""
 
     // Data model
     model: communicationManager.remoteDeviceModel
@@ -26,22 +26,26 @@ DelegateModel
         implicitHeight: columnLayout.implicitHeight + topPadding + bottomPadding
         implicitWidth: parent.width
         Material.background: selected ? selectedBackground : idleBackground
-        Material.elevation: 10
+        Material.elevation: 1
 
-        MouseArea {
-            parent: pane
-            width: parent.width
-            height: parent.height
-            propagateComposedEvents: true
-            onClicked:
-                if (buttonMoreMouseArea.containsMouse)
-                    mouse.accepted = false
-                else
-                {
-                    selectedIndex = index
-                    connectionString = item.connectionString
-                }
-        }
+        //        MouseArea {
+        //            parent: pane
+        //            width: parent.width
+        //            height: parent.height
+        //            propagateComposedEvents: true
+        //            onClicked:
+        //                if (buttonMoreMouseArea.containsMouse)
+        //                    mouse.accepted = false
+        //                else if (buttonConnectMouseArea.containsMouse)
+        //                {
+        //                    mouse.accept = false
+        //                }
+        //                else
+        //                {
+        //                    selectedIndex = index
+        //                    connectionString = item.connectionString
+        //                }
+        //        }
 
         ColumnLayout {
             id: columnLayout
@@ -62,18 +66,69 @@ DelegateModel
                 }
 
                 RoundButton {
+                    id: buttonConnectDisconnect
+
+                    Layout.margins: -10
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: height
+
+                    flat: true
+                    radius: 4
+
+                    icon.source: item.connectionState === RemoteDevice.CONNECTED ? "qrc:/link-black-24dp.svg" : "qrc:/link_off-black-24dp.svg"
+                    icon.color:  item.connectionState === RemoteDevice.CONNECTED ? Material.accent : Material.foreground
+
+                    Connections {
+                        target: item
+                        onConnectionStateChanged: {
+                            iconAnimation.stop();
+                            buttonConnectDisconnect.opacity = 1
+                        }
+                    }
+
+                    SequentialAnimation {
+                        id: iconAnimation
+                        running: false
+                        loops: -1
+                        //alwaysRunToEnd: true
+                        NumberAnimation {
+                            target: buttonConnectDisconnect
+                            property: "opacity"
+                            duration: 700
+                            from: 1
+                            to: 0
+                        }
+                        NumberAnimation {
+                            target: buttonConnectDisconnect
+                            property: "opacity"
+                            duration: 700
+                            from: 0
+                            to: 1
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            iconAnimation.start();
+                            if (item.connectionState === RemoteDevice.CONNECTED) {
+                                communicationManager.disconnect();
+                            }
+                            else {
+                                communicationManager.connect(item.connectionString);
+                            }
+                        }
+                    }
+                }
+
+                RoundButton {
                     id: buttonMore
                     Layout.margins: -10
-                    Layout.preferredHeight: 40
-                    Layout.preferredWidth: 40
-                    // Tooltip
-                    ToolTip.delay: 1500
-                    ToolTip.timeout: 3000
-                    ToolTip.visible: hovered
-                    ToolTip.text: "Additional information"
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: height
                     flat: true
-                    text: "..."
-
+                    icon.source: expanded ?  "qrc:/expand_less-black-24dp.svg" : "qrc:/expand_more-black-24dp.svg"
+                    radius: 4
                     MouseArea {
                         id:  buttonMoreMouseArea
                         anchors.fill: parent
@@ -89,9 +144,7 @@ DelegateModel
                 Layout.fillHeight: true
                 columns: 2
                 visible: expanded
-
-                Repeater
-                {
+                Repeater {
                     model: item.additionalInfo
                     Label {
                         Layout.preferredWidth: contentWidth
@@ -100,85 +153,6 @@ DelegateModel
                         text: modelData
                     }
                 }
-
-                // Location on the Bus
-                //                Label {
-                //                    Layout.preferredWidth: contentWidth
-                //                    Layout.preferredHeight: contentHeight
-                //                    elide: Text.ElideRight
-                //                    text: "Location:"
-                //                }
-                //                Label {
-                //                    Layout.preferredWidth: contentWidth
-                //                    Layout.preferredHeight: contentHeight
-                //                    elide: Text.ElideRight
-                //                    text: item.location
-                //                }
-                //                // Description
-                //                Label {
-                //                    Layout.preferredWidth: contentWidth
-                //                    Layout.preferredHeight: contentHeight
-                //                    elide: Text.ElideRight
-                //                    text: "Description:"
-                //                }
-                //                Label {
-                //                    Layout.preferredWidth: contentWidth
-                //                    Layout.preferredHeight: contentHeight
-                //                    elide: Text.ElideRight
-                //                    text: item.description
-                //                }
-                //                // Manufacturer
-                //                Label {
-                //                    Layout.preferredWidth: contentWidth
-                //                    Layout.preferredHeight: contentHeight
-                //                    elide: Text.ElideRight
-                //                    text: "Manufacturer:"
-                //                }
-                //                Label {
-                //                    Layout.preferredWidth: contentWidth
-                //                    Layout.preferredHeight: contentHeight
-                //                    elide: Text.ElideRight
-                //                    text: item.manufacturer
-                //                }
-                //                // Serial number
-                //                Label {
-                //                    Layout.preferredWidth: contentWidth
-                //                    Layout.preferredHeight: contentHeight
-                //                    elide: Text.ElideRight
-                //                    text: "Serial number:"
-                //                }
-                //                Label {
-                //                    Layout.preferredWidth: contentWidth
-                //                    Layout.preferredHeight: contentHeight
-                //                    elide: Text.ElideRight
-                //                    text: item.serialNumber
-                //                }
-                //                // Vendor Id
-                //                Label {
-                //                    Layout.preferredWidth: contentWidth
-                //                    Layout.preferredHeight: contentHeight
-                //                    elide: Text.ElideRight
-                //                    text: "Vendor Id:"
-                //                }
-                //                Label {
-                //                    Layout.preferredWidth: contentWidth
-                //                    Layout.preferredHeight: contentHeight
-                //                    elide: Text.ElideRight
-                //                    text: item.vendorId
-                //                }
-                //                // Product Id
-                //                Label {
-                //                    Layout.preferredWidth: contentWidth
-                //                    Layout.preferredHeight: contentHeight
-                //                    elide: Text.ElideRight
-                //                    text: "Product Id:"
-                //                }
-                //                Label {
-                //                    Layout.preferredWidth: contentWidth
-                //                    Layout.preferredHeight: contentHeight
-                //                    elide: Text.ElideRight
-                //                    text: item.productId
-                //                }
             }
         }
     }

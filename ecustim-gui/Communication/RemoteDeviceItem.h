@@ -7,19 +7,24 @@ class RemoteDeviceItem : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool connected READ connected WRITE setConnectede NOTIFY connectedChanged)
+    Q_PROPERTY(CONNECTION_STATE connectionState READ connectionState WRITE setConnectionState NOTIFY connectionStateChanged);
     Q_PROPERTY(QString displayText READ displayText WRITE setDisplayText NOTIFY displayTextChanged)
     Q_PROPERTY(QString connectionString READ connectionString WRITE setConnectionString NOTIFY connectionStringChanged)
     Q_PROPERTY(QStringList additionalInfo READ additionalInfo WRITE setAdditionalInfo NOTIFY additionalInfoChanged)
 
-    QString m_displayText;
-    QStringList m_additionalInfo;
-    QString m_connectionString;
-
-    bool m_connected;
-
 public:
     explicit RemoteDeviceItem(QObject *parent = nullptr);
+
+    //
+    enum CONNECTION_STATE
+    {
+        //CONNECTING = 0,
+        CONNECTED,
+        //DISCONNECTING,
+        UNCONNECTED,
+        //UNKNOWN,
+    };
+    Q_ENUM(CONNECTION_STATE)
 
     QStringList additionalInfo() const
     {
@@ -36,10 +41,16 @@ public:
         return m_connectionString;
     }
 
-    bool connected() const
+    CONNECTION_STATE connectionState() const
     {
-        return m_connected;
+        return m_connectionState;
     }
+
+private:
+    QString m_displayText;
+    QStringList m_additionalInfo;
+    QString m_connectionString;
+    CONNECTION_STATE m_connectionState = UNCONNECTED;
 
 public slots:
 
@@ -70,20 +81,20 @@ public slots:
         emit connectionStringChanged(m_connectionString);
     }
 
-    void setConnectede(bool connected)
+    void setConnectionState(CONNECTION_STATE connectionState)
     {
-        if (m_connected == connected)
+        if (m_connectionState == connectionState)
             return;
 
-        m_connected = connected;
-        emit connectedChanged(m_connected);
+        m_connectionState = connectionState;
+        emit connectionStateChanged(m_connectionState);
     }
 
 signals:
     void additionalInfoChanged(QStringList additionalInfo);
     void displayTextChanged(QString displayText);
     void connectionStringChanged(QString connectionString);
-    void connectedChanged(bool connected);
+    void connectionStateChanged(CONNECTION_STATE connectionState);
 };
 
 #endif // DEVICEITEM_H
