@@ -1,22 +1,22 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
-        <file>TriggerPatternView.qml</file>
-        <file>Style.qml</file>
-        <file>qmldir</file>
-        <file>ConnectionView.qml</file>
-        <file>VariableOutputItem.qml</file>
-        <file>InputsOutputsView.qml</file>
-        <file>SwitchableInputItem.qml</file>
-        <file>SwitchableOutputItem.qml</file>
-        <file>ConfigureButton.qml</file>
-        <file>SwitchableOutputsView.qml</file>
-        <file>VariableOutputsView.qml</file>
-        <file>SwitchableInputsView.qml</file>
-        <file>CollapsableGroupBox.qml</file>
-        <file>RemoteDeviceDelegate.qml</file>
-        <file>AnimatedButton.qml</file>
-        <file>InputsOutputsEditView.qml</file>
-        <file>InputsOutputsDelegate.qml</file>
+        <file>qml/AnimatedButton.qml</file>
+        <file>qml/CollapsableGroupBox.qml</file>
+        <file>qml/ConfigureButton.qml</file>
+        <file>qml/ConnectionView.qml</file>
+        <file>qml/InputsOutputsDelegate.qml</file>
+        <file>qml/InputsOutputsEditView.qml</file>
+        <file>qml/InputsOutputsView.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/RemoteDeviceDelegate.qml</file>
+        <file>qml/Style.qml</file>
+        <file>qml/SwitchableInputItem.qml</file>
+        <file>qml/SwitchableInputsView.qml</file>
+        <file>qml/SwitchableOutputItem.qml</file>
+        <file>qml/SwitchableOutputsView.qml</file>
+        <file>qml/TriggerPatternView.qml</file>
+        <file>qml/VariableOutputItem.qml</file>
+        <file>qml/VariableOutputsView.qml</file>
+        <file>qml/qmldir</file>
     </qresource>
 </RCC>

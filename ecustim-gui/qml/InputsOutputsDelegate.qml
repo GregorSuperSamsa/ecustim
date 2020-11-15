@@ -92,7 +92,7 @@ Pane {
                 flat: true
                 radius: 4
 
-                icon.source: "qrc:/clear-black-24dp.svg"
+                icon.source: "qrc:/images/clear-black-24dp.svg"
                 //icon.color:  item.connectionState === RemoteDevice.CONNECTED ? Material.accent : Material.foreground
 
                 MouseArea {
@@ -109,7 +109,7 @@ Pane {
             //                    Layout.fillHeight: true
             //                    Layout.preferredWidth: height
             //                    flat: true
-            //                    icon.source: expanded ?  "qrc:/expand_less-black-24dp.svg" : "qrc:/expand_more-black-24dp.svg"
+            //                    icon.source: expanded ?  "qrc:/images/expand_less-black-24dp.svg" : "qrc:/images/expand_more-black-24dp.svg"
             //                    radius: 4
             //                    MouseArea {
             //                        id:  buttonMoreMouseArea

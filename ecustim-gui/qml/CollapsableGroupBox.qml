@@ -13,9 +13,9 @@ Item
     property bool hasBackground: true
     property bool minimized: false
     property real collapsedHeightOffset: 10
-    implicitHeight:  minimized ?
-                         groupBox.label.implicitHeight + collapsedHeightOffset:
-                         groupBox.implicitHeight +groupBox.label.height
+    implicitHeight:  minimized ? groupBox.label.implicitHeight + collapsedHeightOffset: groupBox.implicitHeight +groupBox.label.height
+
+
     GroupBox
     {
         id: groupBox
@@ -77,7 +77,7 @@ Item
                 anchors.top: parent.top
                 id: button
                 flat: true
-                icon.source: "qrc:/build-black-24dp.svg"
+                icon.source: "qrc:/images/build-black-24dp.svg"
                 //icon.width: 36
                 //icon.height: 36
                 icon.color: Material.foreground

@@ -1,19 +1,19 @@
 <RCC>
     <qresource prefix="/">
-        <file>expand_less-black-24dp.svg</file>
-        <file>expand_more-black-24dp.svg</file>
-        <file>link-black-24dp.svg</file>
-        <file>link_off-black-24dp.svg</file>
-        <file>clear-black-24dp.svg</file>
-        <file>add-black-24dp.svg</file>
-        <file>save-black-24dp.svg</file>
-        <file>save-black-36dp.svg</file>
-        <file>save-black-48dp.svg</file>
-        <file>link-black-36dp.svg</file>
-        <file>link-black-48dp.svg</file>
-        <file>miscellaneous_services-black-24dp.svg</file>
-        <file>build-black-24dp.svg</file>
-        <file>settings-black-24dp.svg</file>
-        <file>compare_arrows-black-24dp.svg</file>
+        <file>images/add-black-24dp.svg</file>
+        <file>images/build-black-24dp.svg</file>
+        <file>images/clear-black-24dp.svg</file>
+        <file>images/compare_arrows-black-24dp.svg</file>
+        <file>images/expand_less-black-24dp.svg</file>
+        <file>images/expand_more-black-24dp.svg</file>
+        <file>images/link-black-24dp.svg</file>
+        <file>images/link-black-36dp.svg</file>
+        <file>images/link-black-48dp.svg</file>
+        <file>images/link_off-black-24dp.svg</file>
+        <file>images/miscellaneous_services-black-24dp.svg</file>
+        <file>images/save-black-24dp.svg</file>
+        <file>images/save-black-36dp.svg</file>
+        <file>images/save-black-48dp.svg</file>
+        <file>images/settings-black-24dp.svg</file>
     </qresource>
 </RCC>

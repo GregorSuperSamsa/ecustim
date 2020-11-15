@@ -39,7 +39,7 @@ ApplicationWindow
                 //Layout.preferredWidth: implicitWidth
                 Layout.preferredHeight: implicitHeight
                 flat: true
-                icon.source: "qrc:/settings-black-24dp.svg"
+                icon.source: "qrc:/images/settings-black-24dp.svg"
                 //icon.width: 36
                 // icon.height: 36
                 icon.color: Material.foreground
@@ -60,7 +60,7 @@ display: AbstractButton.TextBesideIcon
 //                Layout.preferredWidth: implicitWidth
                 Layout.preferredHeight: implicitHeight
                 flat: true
-                icon.source: "qrc:/compare_arrows-black-24dp.svg"
+                icon.source: "qrc:/images/compare_arrows-black-24dp.svg"
                 //icon.width: 36
                 //icon.height: 36
                 icon.color: Material.foreground
@@ -79,7 +79,7 @@ display: AbstractButton.TextBesideIcon
 //                Layout.preferredWidth: implicitWidth
                 Layout.preferredHeight: implicitHeight
                 flat: true
-                icon.source: "qrc:/build-black-24dp.svg"
+                icon.source: "qrc:/images/build-black-24dp.svg"
                 //icon.width: 36
                 //icon.height: 36
                 icon.color: Material.foreground
@@ -98,7 +98,7 @@ display: AbstractButton.TextBesideIcon
 //                Layout.preferredWidth: implicitWidth
                 Layout.preferredHeight: implicitHeight
                 flat: true
-                icon.source: "qrc:/link-black-24dp.svg"
+                icon.source: "qrc:/images/link-black-24dp.svg"
                 //icon.width: 36
                 //icon.height: 36
                 icon.color: Material.foreground

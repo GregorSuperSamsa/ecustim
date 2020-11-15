@@ -75,7 +75,7 @@ DelegateModel {
                     flat: true
                     radius: 4
 
-                    icon.source: item.connectionState === RemoteDevice.CONNECTED ? "qrc:/link-black-24dp.svg" : "qrc:/link_off-black-24dp.svg"
+                    icon.source: item.connectionState === RemoteDevice.CONNECTED ? "qrc:/images/link-black-24dp.svg" : "qrc:/images/link_off-black-24dp.svg"
                     icon.color:  item.connectionState === RemoteDevice.CONNECTED ? Material.accent : Material.foreground
 
                     Connections {
@@ -127,7 +127,7 @@ DelegateModel {
                     Layout.fillHeight: true
                     Layout.preferredWidth: height
                     flat: true
-                    icon.source: expanded ?  "qrc:/expand_less-black-24dp.svg" : "qrc:/expand_more-black-24dp.svg"
+                    icon.source: expanded ?  "qrc:/images/expand_less-black-24dp.svg" : "qrc:/images/expand_more-black-24dp.svg"
                     radius: 4
                     MouseArea {
                         id:  buttonMoreMouseArea

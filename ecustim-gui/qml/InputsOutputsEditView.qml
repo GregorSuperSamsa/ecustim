@@ -52,7 +52,7 @@ Item
                         anchors.right: parent.right
                         flat: true
                         radius: 3
-                        icon.source: "qrc:/clear-black-24dp.svg"
+                        icon.source: "qrc:/images/clear-black-24dp.svg"
                     }
                 }
             }
@@ -63,7 +63,7 @@ Item
                 Layout.preferredWidth: implicitWidth
 
                 flat: true
-                icon.source: "qrc:/add-black-24dp.svg"
+                icon.source: "qrc:/images/add-black-24dp.svg"
                 radius: 3
                 onClicked: {
                     //TODO
@@ -186,7 +186,7 @@ Item
                 Layout.fillWidth: true
                 Layout.preferredHeight: implicitHeight
                 flat: true
-                icon.source: "qrc:/save-black-48dp.svg"
+                icon.source: "qrc:/images/save-black-48dp.svg"
                 radius: 3
                 onClicked: { }
             }
