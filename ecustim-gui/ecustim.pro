@@ -2,7 +2,7 @@ QT += quick serialport bluetooth widgets charts quickcontrols2 svg
 
 TARGET = ecustim-gui
 
-VERSION = 0.1
+VERSION = 0.2
 
 CONFIG += c++17
 

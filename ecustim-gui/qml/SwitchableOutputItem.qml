@@ -1,48 +1,39 @@
-import QtQuick 2.9
-import QtQuick.Extras 1.4
-import QtQuick.Controls 2.3
-import QtQuick.Controls.Material 2.0
-import QtQuick.Layouts 1.3
+import QtQuick 2.12
+import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.12
 
-Item {
+Item
+{
     id: root
-    implicitHeight: columnLayout.implicitHeight
-    implicitWidth: columnLayout.implicitWidth
 
     property string caption: ""
     property real setValue: 0
     property real actualValue: 0
 
-    ColumnLayout
-    {
+    implicitHeight: columnLayout.implicitHeight
+    implicitWidth: columnLayout.implicitWidth
+
+    ColumnLayout {
         id: columnLayout
         anchors.fill: parent
         spacing: 0
 
-        Switch
-        {
+        Switch {
             id: outputSwitch
-            Layout.preferredWidth: 30
-            Layout.preferredHeight: 30
-            Layout.alignment: Qt.AlignCenter
+
+            Layout.preferredHeight: implicitWidth
+            Layout.alignment: Qt.AlignHCenter
+
             rotation: 270
-            onCheckedChanged:
-            {
-                setValue = checked
-            }
+            implicitWidth: 60
+            implicitHeight: 30
         }
 
-        Label
-        {
+        Label {
             id: label
-            Layout.fillWidth: true
-            Layout.preferredHeight: contentHeight
-            Layout.topMargin: 5
-
+            Layout.alignment: Qt.AlignHCenter
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            fontSizeMode: Text.VerticalFit
-
             text: caption
         }
     }

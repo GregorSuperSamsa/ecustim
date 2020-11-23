@@ -4,8 +4,8 @@ import QtQuick.Layouts 1.12
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Material 2.3
 
-ApplicationWindow
-{
+
+ApplicationWindow {
     id: root
     visible: true
     width: 640
@@ -16,37 +16,38 @@ ApplicationWindow
     Material.accent: Material.DeepOrange
 
 
-    ColumnLayout
-    {
+    ColumnLayout {
         anchors.fill: parent
-        anchors.leftMargin: 10
-        anchors.rightMargin: 10
         spacing: 0
 
-        RowLayout
-        {
+        RowLayout {
             id: menu
-            spacing: 0
-            Layout.fillWidth: true
-            //Layout.preferredWidth: implicitWidth
-            Layout.preferredHeight: implicitHeight
             Layout.alignment: Qt.AlignCenter
+            spacing: 0
+
+            RoundButton {
+                id: buttonConnection
+                property int stackIndex: 3
+                icon.source: "qrc:/images/link-black-24dp.svg"
+                flat: true
+                radius: 3
+                icon.color: Material.foreground
+                display: AbstractButton.IconOnly
+                onClicked: {
+                    menu.toggleButton(stackIndex)
+                }
+            }
 
             RoundButton
             {
                 id: buttonTrigger
                 property int stackIndex: 0
-                //Layout.preferredWidth: implicitWidth
-                Layout.preferredHeight: implicitHeight
-                flat: true
                 icon.source: "qrc:/images/settings-black-24dp.svg"
-                //icon.width: 36
-                // icon.height: 36
-                icon.color: Material.foreground
-                radius: 3
 
-                text: "Trigger patterns"
-display: AbstractButton.TextBesideIcon
+                flat: true
+                radius: 3
+                icon.color: Material.foreground
+                display: AbstractButton.IconOnly
                 onClicked: {
                     menu.toggleButton(stackIndex)
                 }
@@ -56,55 +57,12 @@ display: AbstractButton.TextBesideIcon
             {
                 id: buttonVariableIO
                 property int stackIndex: 1
-//                Layout.minimumWidth: icon.width
-//                Layout.preferredWidth: implicitWidth
-                Layout.preferredHeight: implicitHeight
-                flat: true
                 icon.source: "qrc:/images/compare_arrows-black-24dp.svg"
-                //icon.width: 36
-                //icon.height: 36
-                icon.color: Material.foreground
-                text: "IO"
-                display: AbstractButton.TextBesideIcon
-                radius: 3
-                onClicked: {
-                    menu.toggleButton(stackIndex)
-                }
-            }
 
-            RoundButton {
-                id: buttonVariableIOSettings
-                property int stackIndex: 2
-//                Layout.minimumWidth: icon.width
-//                Layout.preferredWidth: implicitWidth
-                Layout.preferredHeight: implicitHeight
                 flat: true
-                icon.source: "qrc:/images/build-black-24dp.svg"
-                //icon.width: 36
-                //icon.height: 36
-                icon.color: Material.foreground
                 radius: 3
-                text: "IO Settings"
-                display: AbstractButton.TextBesideIcon
-                onClicked: {
-                    menu.toggleButton(stackIndex)
-                }
-            }
-
-            RoundButton {
-                id: buttonConnection
-                property int stackIndex: 3
-//               Layout.minimumWidth: icon.width
-//                Layout.preferredWidth: implicitWidth
-                Layout.preferredHeight: implicitHeight
-                flat: true
-                icon.source: "qrc:/images/link-black-24dp.svg"
-                //icon.width: 36
-                //icon.height: 36
                 icon.color: Material.foreground
-                radius: 3
-                text: "Connection"
-                display: AbstractButton.TextBesideIcon
+                display: AbstractButton.IconOnly
                 onClicked: {
                     menu.toggleButton(stackIndex)
                 }
@@ -135,16 +93,16 @@ display: AbstractButton.TextBesideIcon
                     buttonVariableIO.icon.color = Material.foreground
                 }
                 //
-                if (buttonVariableIOSettings.stackIndex === selectedStackIndex) {
-                    //buttonVariableIOSettings.icon.width = 48
-                    //buttonVariableIOSettings.icon.height = 48
-                    buttonVariableIOSettings.icon.color = Material.accent
-                }
-                else {
-                    //buttonVariableIOSettings.icon.width = 36
-                    //buttonVariableIOSettings.icon.height = 36
-                    buttonVariableIOSettings.icon.color = Material.foreground
-                }
+//                if (buttonVariableIOSettings.stackIndex === selectedStackIndex) {
+//                    //buttonVariableIOSettings.icon.width = 48
+//                    //buttonVariableIOSettings.icon.height = 48
+//                    buttonVariableIOSettings.icon.color = Material.accent
+//                }
+//                else {
+//                    //buttonVariableIOSettings.icon.width = 36
+//                    //buttonVariableIOSettings.icon.height = 36
+//                    buttonVariableIOSettings.icon.color = Material.foreground
+//                }
                 //
                 if (buttonConnection.stackIndex === selectedStackIndex) {
                     //buttonConnection.icon.width = 48
@@ -166,7 +124,7 @@ display: AbstractButton.TextBesideIcon
             id: stack
             Layout.fillWidth: true
             Layout.fillHeight: true
-
+Layout.margins: 10
             clip: true
             currentIndex: 0
 

@@ -5,34 +5,27 @@ import QtGraphicalEffects 1.0
 import QtQuick.Controls.Material 2.3
 
 
-Item
-{
+Item {
     id: root
     implicitHeight: groupBox.implicitHeight
 
     property variant model: 0
 
-    CollapsableGroupBox
-    {
+
+    CollapsableGroupBox {
         id: groupBox
         anchors.fill: parent
-        //hasBackground: true
-        hasBackground: false
         title: "Switchable Outputs"
 
-        content: Flow
-        {
+        content: Flow {
             id: flow
-            anchors.fill: parent
-            spacing: 10
-            padding: 0
+            width: parent.width
+            spacing: 0
 
-            Repeater
-            {
+            Repeater {
                 id: repeater
                 model: root.model
-                delegate: SwitchableOutputItem
-                {
+                delegate: SwitchableOutputItem {
                     width:   Math.max((flow.width - flow.spacing * (repeater.model.count - 1)) / repeater.model.count, implicitWidth)
 
                     visible: model.item.active
@@ -57,7 +50,14 @@ Item
                     children[j].implicitWidth = maxImplicitWidth
                 }
                 //flow.forceLayout()
+
+//                console.log("MaxImplicitWidth:" + maxImplicitWidth);
+//                console.log("GroupBoxImplicitHeight:" + root.implicitHeight);
             }
+        }
+
+        onButtonToolClicked:
+        {
         }
     }
 }

@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/AnimatedButton.qml</file>
-        <file>qml/CollapsableGroupBox.qml</file>
+        <file>qml/CollapsableGroupBox_old.qml</file>
         <file>qml/ConfigureButton.qml</file>
         <file>qml/ConnectionView.qml</file>
         <file>qml/InputsOutputsDelegate.qml</file>
@@ -18,5 +18,6 @@
         <file>qml/VariableOutputItem.qml</file>
         <file>qml/VariableOutputsView.qml</file>
         <file>qml/qmldir</file>
+        <file>qml/CollapsableGroupBox.qml</file>
     </qresource>
 </RCC>

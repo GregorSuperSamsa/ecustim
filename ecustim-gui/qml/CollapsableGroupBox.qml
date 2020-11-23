@@ -1,110 +1,98 @@
-import QtQuick 2.6
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
-import QtGraphicalEffects 1.0
-import QtQuick.Controls.Material 2.3
 
 
-Item
-{
-    id:root
-    property alias title: groupBox.title
-    property alias content: groupBox.contentChildren
-    property bool hasBackground: true
+Item {
+
+    //border.color: "yellow"
+    //color: "transparent"
+
+    id: root
+
+    property int contentHeight: (height - rowLayout.implicitHeight)
+    property alias content: rect.children
+    property alias title: label.text
     property bool minimized: false
-    property real collapsedHeightOffset: 10
-    implicitHeight:  minimized ? groupBox.label.implicitHeight + collapsedHeightOffset: groupBox.implicitHeight +groupBox.label.height
 
+    signal buttonToolClicked()
 
-    GroupBox
-    {
-        id: groupBox
+    implicitHeight: columnLayout.implicitHeight
+
+    ColumnLayout {
+        id: columnLayout
         anchors.fill: parent
-        clip: true
+        spacing: 0
 
-        label:Item {
-            x: groupBox.leftPadding
-            width: implicitWidth
-            height: implicitHeight
-//            Rectangle {
-//            color: "red"
-//            //y: groupBox.y - height
-//            width: parent.availableWidth
-//            height: button.height
+        RowLayout {
+            id: rowLayout
+            property int defaultHeight: 40
+            Layout.fillWidth: true
+            //Layout.preferredHeight: defaultHeight
+            Layout.minimumHeight: defaultHeight
+            Layout.maximumHeight: defaultHeight
+            Layout.alignment: Qt.AlignTop
+            spacing: 0
 
-            Label
-            {
+            RoundButton {
+                id: buttonExpand
+                Layout.fillHeight: true
+                Layout.preferredWidth: height
+                flat: true
+                icon.source: minimized ? "qrc:/images/expand_more-black-24dp.svg" : "qrc:/images/expand_less-black-24dp.svg"
+                radius: 4
+                onClicked:
+                {
+                    minimized = !minimized
+                }
+//                background: Rectangle
+//                {
+//                    anchors.fill: parent
+//                    border.color: "red"
+//                    color: "transparent"
+//                }
+            }
+
+            Label {
                 id: label
-                text: title
-                height: button.height
-                width: implicitWidth
-                leftPadding: indicator.x + indicator.width + groupBox.leftPadding /2
-                elide: Text.ElideRight
-
-                MouseArea
-                {
-                    anchors.fill: parent
-                    onClicked:
-                    {
-                        minimized = !minimized
-                        indicator.requestPaint()
-                    }
-                }
-                // Collapsable groupbox pointer
-                Canvas
-                {
-                    id: indicator
-                    anchors.verticalCenter: parent.verticalCenter
-                    x: groupBox.leftPadding
-                    rotation: minimized ? -90 : 0
-                    width: 12
-                    height: 8
-                    contextType: "2d"
-                    onPaint: {
-                        context.reset();
-                        context.moveTo(0, 0);
-                        context.lineTo(width, 0);
-                        context.lineTo(width / 2, height);
-                        context.closePath();
-                        context.fillStyle = parent.color;
-                        context.fill();
-                    }
-                }
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                verticalAlignment: Text.AlignVCenter
+                clip: true
+//                background: Rectangle
+//                {
+//                    anchors.fill: parent
+//                    border.color: "red"
+//                    color: "transparent"
+//                }
             }
 
             RoundButton {
-                anchors.left: label.right
-                anchors.top: parent.top
-                id: button
+                id: buttonSettings
+                Layout.fillHeight: true
+                Layout.preferredWidth: height
                 flat: true
+                radius: 4
                 icon.source: "qrc:/images/build-black-24dp.svg"
-                //icon.width: 36
-                //icon.height: 36
-                icon.color: Material.foreground
-                radius: 3
-                onClicked: {
-                }
+                onClicked:
+                    buttonToolClicked()
+//                background: Rectangle
+//                {
+//                    anchors.fill: parent
+//                    border.color: "red"
+//                    color: "transparent"
+//                }
             }
         }
 
-        background: Rectangle
-        {
-            visible: hasBackground || (minimized && collapsedHeightOffset > 0)
-            enabled: hasBackground || (minimized && collapsedHeightOffset > 0)
-
-            y: parent.topPadding - parent.padding
-            width: parent.width
-            height: parent.height - parent.topPadding + parent.padding
-
-            //Material.background: Style.color.foreground
-            //Material.elevation: visible ? 10 : 0
-            color: "transparent"
-        }
-
-        // Animated height transition
-        Behavior on height
-        {
-            NumberAnimation { duration: 250 }
+        Item {
+            implicitHeight: minimized ? 0 : childrenRect.height
+            //border.color: "white"
+            //color: "transparent"
+            id: rect
+            Layout.fillWidth: true
+            Layout.preferredHeight: implicitHeight
+            clip: true
         }
     }
 }

@@ -1,4 +1,4 @@
-import QtQuick 2.6
+import QtQuick 2.10
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.12
 import QtGraphicalEffects 1.0
@@ -25,16 +25,13 @@ Item
     CollapsableGroupBox {
         id: groupBox
         anchors.fill: parent
-        hasBackground: true
-        //hasBackground: false
         title: "Switchable Inputs"
 
         content: Flow
         {
             id: flow
-            anchors.fill: parent
-            spacing: 10
-            padding: 0
+            width: parent.width
+            spacing: 0
 
             Repeater
             {
@@ -48,7 +45,7 @@ Item
                 }
             }
             // TODO: Probably, this snippet should be moved in the model code
-            Component.onCompleted:
+           Component.onCompleted:
             {
                 var maxImplicitWidth = 0;
                 for (var i = 0; i < children.length; ++i) {

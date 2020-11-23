@@ -1,107 +1,138 @@
 import QtQuick 2.12
-import QtQuick.Extras 1.4
 import QtQuick.Controls 2.5
-import QtQuick.Controls.Styles 1.4
-import QtQuick.Layouts 1.12
-import QtQuick.Controls.Material 2.3
-import '.'
 
-Item
+
+
+Rectangle
 {
     id: root
-    implicitHeight: 150
-
+    color: "transparent"
     property string caption: ""
     property real setValue: 0
-    property string valueUnits: "\u03A9"
+    property string valueUnits: "[\u03A9]"
     property real actualValue: 0
     property real i2cAddress: 0xFF
 
-    ColumnLayout
-    {
-        anchors.fill: parent
-        spacing: 0
-        // Set output value placeholder
-        Item
-        {
-            Layout.fillWidth: true
-            Layout.preferredHeight: labelValue.height
-            //Layout.topMargin: 5
-            Layout.bottomMargin: 3
-            // Set output value reading
-            Label
-            {
-                id: labelValue
-                anchors.centerIn: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: sliderSetValue.value.toFixed(0)
-                // 20% bigger than default font
-                font.pointSize: labelValueUnit.font.pointSize * 1.2
-            }
-            // Set output value unit
-            Label
-            {
-                id: labelValueUnit
-                anchors.left: labelValue.right
-                anchors.bottom: labelValue.bottom
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: " " + valueUnits
-            }
-        }
-        // Set output value slider placeholder
-        RowLayout
-        {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            spacing: 0
+//implicitHeight: childrenRect.height
+//implicitWidth:  childrenRect.width
 
-            Slider {
-                id: sliderSetValue
-                Layout.fillHeight: true
-                Layout.fillWidth: true
 
-                from: 0
-                to: 111
-                stepSize: 1
-                orientation: Qt.Vertical
-                onValueChanged: setValue = value
-            }
+    Label {
+        id: labelValue
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
 
-            //            Slider
-            //            {
-            //                id: sliderReadValue
-            //                enabled: false
-            //                Layout.fillHeight: true
-            //                Layout.fillWidth: true
+        horizontalAlignment: Qt.AlignHCenter
+        verticalAlignment: Qt.AlignVCenter
+        text: sliderSetValue.value.toFixed(0)
+    }
 
-            //                handle:Item{}
-            //                from: sliderSetValue.from
-            //                to: sliderSetValue.to
-            //                stepSize: sliderSetValue.stepSize
-            //                orientation: Qt.Vertical
-            //                ToolTip.delay: 1500
-            //                ToolTip.timeout: 3000
-            //                ToolTip.visible: hovered && !pressed
-            //                ToolTip.text: "Actual value"
-            //                value: actualValue
-            //            }
+    Slider {
+        id: sliderSetValue
+        anchors.top: labelValue.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: labelCaption.top
 
-        }
-        // Caption (name) of the output value
-        Label
-        {
-            id: labelCaption
-            Layout.fillWidth: true
-            Layout.preferredHeight: implicitHeight
-            Layout.topMargin: 5
-            Layout.bottomMargin: 5
+        from: 0
+        to: 111
+        stepSize: 1
+        orientation: Qt.Vertical
+        onValueChanged: setValue = value
+    }
 
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-
-            text: caption
-        }
+    Label {
+        id: labelCaption
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        horizontalAlignment: Qt.AlignHCenter
+        verticalAlignment: Qt.AlignVCenter
+        text: caption + " " + valueUnits
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//import QtQuick 2.12
+//import QtQuick.Controls 2.5
+//import QtQuick.Layouts 1.12
+
+
+//Rectangle
+//{
+//    id: root
+//    anchors.fill: parent
+
+//    property string caption: ""
+//    property real setValue: 0
+//    property string valueUnits: "[\u03A9]"
+//    property real actualValue: 0
+//    property real i2cAddress: 0xFF
+
+//    implicitHeight: columnLayout.implicitHeight
+//    implicitWidth: columnLayout.implicitWidth
+
+//    ColumnLayout {
+//        id: columnLayout
+//        spacing: 0
+//        anchors.fill: parent
+//        anchors.topMargin: 5
+//        anchors.bottomMargin:  5
+
+//        Label {
+//            id: labelValue
+//            Layout.alignment: Qt.AlignHCenter
+//            text: sliderSetValue.value.toFixed(0)
+//        }
+
+//        Slider {
+//            id: sliderSetValue
+//            Layout.fillHeight: true
+//            Layout.fillWidth: true
+
+//            from: 0
+//            to: 111
+//            stepSize: 1
+//            orientation: Qt.Vertical
+//            onValueChanged: setValue = value
+//        }
+
+//        Label {
+//            id: labelCaption
+//            Layout.alignment: Qt.AlignHCenter
+//            text: caption + " " + valueUnits
+//        }
+//    }
+//}
