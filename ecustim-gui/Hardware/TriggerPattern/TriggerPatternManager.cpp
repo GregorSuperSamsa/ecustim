@@ -111,7 +111,17 @@ void TriggerPatternManager::initTestData()
 {
     {
         QSharedPointer<TriggerPatternItem> item(new TriggerPatternItem(this));
-        item->setName("1: 4 cylinder dizzy");
+        QVector<int> i= { 0, 0, 0, 0};
+
+        item->setName("None");
+        item->setData(i);
+
+        model_->insert(item);
+    }
+
+    {
+        QSharedPointer<TriggerPatternItem> item(new TriggerPatternItem(this));
+        item->setName("4 cylinder dizzy");
 
 
         QVector<int> i = { /* dizzy 4 cylinder */
@@ -132,7 +142,7 @@ void TriggerPatternManager::initTestData()
     {
         QSharedPointer<TriggerPatternItem> item(new TriggerPatternItem(this));
         item.reset(new TriggerPatternItem(this));
-        item->setName("2: 6 cylinder dizzy");
+        item->setName("6 cylinder dizzy");
 
         QVector<int> i = {
                             0,0,3,0,0,3,0,0,1,  /* Teeth 1-3 */
@@ -147,12 +157,12 @@ void TriggerPatternManager::initTestData()
         model_->insert(item);
     }
 
-    return;
     {
         QSharedPointer<TriggerPatternItem> item(new TriggerPatternItem(this));
-        item->setName("3: 8 cylinder dizzy");
+        item->setName("8 cylinder dizzy");
         model_->insert(item);
     }
+    return;
     {
         QSharedPointer<TriggerPatternItem> item(new TriggerPatternItem(this));
         item->setName("4: 60-2 crank only");

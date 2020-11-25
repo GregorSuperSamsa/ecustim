@@ -15,7 +15,7 @@ Item {
     property alias title: label.text
     property bool minimized: false
 
-    signal buttonToolClicked()
+    signal buttonClicked()
 
     implicitHeight: columnLayout.implicitHeight
 
@@ -59,6 +59,12 @@ Item {
                 Layout.fillHeight: true
                 verticalAlignment: Text.AlignVCenter
                 clip: true
+                MouseArea
+                {
+                    anchors.fill: parent
+                    onClicked:
+                        buttonExpand.clicked()
+                }
 //                background: Rectangle
 //                {
 //                    anchors.fill: parent
@@ -75,7 +81,7 @@ Item {
                 radius: 4
                 icon.source: "qrc:/images/build-black-24dp.svg"
                 onClicked:
-                    buttonToolClicked()
+                    buttonClicked()
 //                background: Rectangle
 //                {
 //                    anchors.fill: parent

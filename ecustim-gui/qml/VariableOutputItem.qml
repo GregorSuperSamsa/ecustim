@@ -2,7 +2,6 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 
 
-
 Rectangle
 {
     id: root
@@ -12,9 +11,6 @@ Rectangle
     property string valueUnits: "[\u03A9]"
     property real actualValue: 0
     property real i2cAddress: 0xFF
-
-//implicitHeight: childrenRect.height
-//implicitWidth:  childrenRect.width
 
 
     Label {

@@ -12,6 +12,9 @@ Item
     ColumnLayout
     {
         anchors.fill: parent
+        anchors.leftMargin: 5
+        anchors.rightMargin:  5
+        anchors.bottomMargin: 5
         spacing: 0
 
         RowLayout
@@ -21,7 +24,6 @@ Item
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredHeight: implicitHeight
             Layout.fillWidth: true
-
 
             spacing: 0
 
@@ -88,7 +90,7 @@ Item
             Layout.fillWidth: true
             Layout.preferredHeight: implicitHeight
             Layout.alignment: Qt.AlignBottom
-            Material.elevation: 1
+            //Material.elevation: 1
 
             text: startDiscovery ? startDiscoveryText : stopDiscoveryText
             onClicked:

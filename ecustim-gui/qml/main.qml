@@ -124,7 +124,7 @@ ApplicationWindow {
             id: stack
             Layout.fillWidth: true
             Layout.fillHeight: true
-Layout.margins: 10
+
             clip: true
             currentIndex: 0
 
@@ -139,6 +139,19 @@ Layout.margins: 10
                 property int stackIndex: 1
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+
+                onEditSwitchableInputs:
+                {
+                    stack.currentIndex = 2
+                }
+                onEditSwitchableOutputs:
+                {
+                    stack.currentIndex = 2
+                }
+                onEditVariableOutputs:
+                {
+                    stack.currentIndex = 2
+                }
             }
             // 3
             InputsOutputsEditView {
@@ -153,9 +166,6 @@ Layout.margins: 10
                 Layout.fillWidth: true
                 Layout.fillHeight: true
             }
-
         }
-
     }
-
 }

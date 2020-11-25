@@ -1,8 +1,4 @@
 import QtQuick 2.6
-import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.12
-import QtGraphicalEffects 1.0
-import QtQuick.Controls.Material 2.3
 
 
 Item {
@@ -10,6 +6,8 @@ Item {
     implicitHeight: groupBox.implicitHeight
 
     property variant model: 0
+
+    signal edit()
 
 
     CollapsableGroupBox {
@@ -56,8 +54,9 @@ Item {
             }
         }
 
-        onButtonToolClicked:
+        onButtonClicked:
         {
+            edit()
         }
     }
 }

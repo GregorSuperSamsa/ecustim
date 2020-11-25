@@ -11,6 +11,9 @@ Item
 
     ColumnLayout {
         anchors.fill: parent
+        anchors.leftMargin: 5
+        anchors.rightMargin:  5
+        anchors.bottomMargin: 5
         spacing: 0
 
         ComboBox {
@@ -18,7 +21,7 @@ Item
             Layout.fillWidth: true
             Layout.preferredHeight: implicitHeight
             model: triggerManager.model
-            displayText: currentText
+
             Material.elevation: 1
 
             property var triggerData: []
@@ -28,8 +31,11 @@ Item
                 width: combo.width
                 text: item.name
                 highlighted: (combo.currentIndex === index)
+
+
                 onClicked: {
-                    combo.displayText = text
+                    combo.displayText = "Trigger pattern  [ " + text + " ]"
+
                     combo.triggerData = item.data
 
                     crankWheelCanvas.requestPaint();
@@ -46,40 +52,70 @@ Item
             Layout.fillHeight: true
             Layout.preferredHeight: 3
 
-            Canvas {
-                id: crankWheelCanvas
+            ColumnLayout
+            {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                Layout.preferredWidth: 1
 
-                clip: true
-                onPaint: {
-                    drawTriggerWheel(
-                                getContext("2d"),
-                                width,
-                                height,
-                                combo.triggerData,
-                                "crank"
-                                );
+                Label {
+                    Layout.fillWidth: true
+                    horizontalAlignment: Qt.AlignHCenter
+                    verticalAlignment: Qt.AlignVCenter
+                    text: "CRANKSHAFT"
+                    Layout.topMargin: 5
+                    Layout.bottomMargin: 5
+                }
+
+                Canvas {
+                    id: crankWheelCanvas
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+
+                    clip: true
+                    onPaint: {
+                        drawTriggerWheel(
+                                    getContext("2d"),
+                                    width,
+                                    height,
+                                    combo.triggerData,
+                                    "crank"
+                                    );
+                    }
                 }
             }
-            Canvas {
-                id: camWheelCanvas
+            ColumnLayout
+            {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                Layout.preferredWidth: 1
-                clip: true
-                onPaint: {
-                    drawTriggerWheel(
-                                getContext("2d"),
-                                width,
-                                height,
-                                combo.triggerData,
-                                "cam"
-                                );
+
+                Label {
+                    Layout.fillWidth: true
+                    horizontalAlignment: Qt.AlignHCenter
+                    verticalAlignment: Qt.AlignVCenter
+                    text: "CAMSHAFT"
+                    Layout.topMargin: 5
+                    Layout.bottomMargin: 5
+                }
+
+                Canvas {
+                    id: camWheelCanvas
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    clip: true
+                    onPaint: {
+                        drawTriggerWheel(
+                                    getContext("2d"),
+                                    width,
+                                    height,
+                                    combo.triggerData,
+                                    "cam"
+                                    );
+                    }
                 }
             }
         }
+
+
 
 
         Canvas {
@@ -87,29 +123,32 @@ Item
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredHeight: 1
+            //Layout.topMargin: 3
             clip: true
             onPaint: {
                 plotPattern(
                             getContext("2d"),
                             width,
-                            height,
+                            height - 3,
                             combo.triggerData,
                             "crank"
                             );
             }
         }
 
+
         Canvas {
             id: camPlotCanvas
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredHeight: 1
+
             clip: true
             onPaint: {
                 plotPattern(
                             getContext("2d"),
                             width,
-                            height,
+                            height - 3,
                             combo.triggerData,
                             "cam"
                             );

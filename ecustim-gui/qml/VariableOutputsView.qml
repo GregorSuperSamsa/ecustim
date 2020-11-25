@@ -13,6 +13,8 @@ Item {
     property bool minimized: groupBox.minimized
     property variant model: 0
 
+    signal edit()
+
     CollapsableGroupBox {
         id: groupBox
         anchors.fill: parent
@@ -28,7 +30,7 @@ Item {
                 id: repeater
                 model: root.model
                 delegate:
-                VariableOutputItem {
+                    VariableOutputItem {
                     width:   Math.max((flow.width - flow.spacing * (repeater.model.count - 1)) / repeater.model.count, implicitWidth)
 
                     height: Math.max(groupBox.contentHeight, 200)
@@ -42,7 +44,7 @@ Item {
 
             // TODO: Probably, this snippet should be moved in the model code
             Component.onCompleted:
-           {
+            {
                 var maxImplicitWidth = 0;
                 for (var i = 0; i < children.length; ++i)
                 {
@@ -57,11 +59,15 @@ Item {
 
 
 
-                flow.forceLayout()
+                //flow.forceLayout()
 
-////                console.log("MaxImplicitWidth:" + maxImplicitWidth);
-////                console.log("GroupBoxImplicitHeight:" + root.implicitHeight);
+                ////                console.log("MaxImplicitWidth:" + maxImplicitWidth);
+                ////                console.log("GroupBoxImplicitHeight:" + root.implicitHeight);
             }
+        }
+        onButtonClicked:
+        {
+            edit()
         }
     }
 }

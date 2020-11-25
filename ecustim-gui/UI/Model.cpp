@@ -36,7 +36,7 @@ QSharedPointer<QObject> Model::data(int index) const
 void Model::insert(QSharedPointer<QObject> item)
 {
     beginInsertRows(QModelIndex(), 0, 0);
-    items.push_front(item);
+    items.push_back(item);
     endInsertRows();
 
     emit countChanged(count());

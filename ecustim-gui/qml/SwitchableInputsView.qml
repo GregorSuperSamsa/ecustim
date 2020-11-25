@@ -1,8 +1,4 @@
 import QtQuick 2.10
-import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.12
-import QtGraphicalEffects 1.0
-import QtQuick.Controls.Material 2.3
 
 
 Item
@@ -11,6 +7,8 @@ Item
     implicitHeight: groupBox.implicitHeight
 
     property variant model: 0
+
+    signal edit()
 
     ListModel
     {
@@ -45,7 +43,7 @@ Item
                 }
             }
             // TODO: Probably, this snippet should be moved in the model code
-           Component.onCompleted:
+            Component.onCompleted:
             {
                 var maxImplicitWidth = 0;
                 for (var i = 0; i < children.length; ++i) {
@@ -56,6 +54,10 @@ Item
                     children[j].implicitWidth = maxImplicitWidth
                 }
             }
+        }
+        onButtonClicked:
+        {
+            edit()
         }
     }
 }
