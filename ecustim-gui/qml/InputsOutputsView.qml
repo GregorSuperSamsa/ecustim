@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
 
+
 Item
 {
     id: root
@@ -9,7 +10,6 @@ Item
     signal editVariableOutputs()
     signal editSwitchableOutputs()
     signal editSwitchableInputs()
-
 
     ScrollView
     {
@@ -27,9 +27,8 @@ Item
         {
             id: columnLayout
             anchors.fill: parent
-            anchors.leftMargin: 5
-            anchors.rightMargin:  5
-            anchors.bottomMargin: 5
+            anchors.leftMargin: 10
+            anchors.rightMargin:  10
             spacing: 5
 
             // Variable outputs (i2c potentiometers)

@@ -11,9 +11,9 @@ Item
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.leftMargin: 5
-        anchors.rightMargin:  5
-        anchors.bottomMargin: 5
+        anchors.leftMargin: 10
+        anchors.rightMargin:  10
+        anchors.bottomMargin: 10
         spacing: 0
 
         ComboBox {

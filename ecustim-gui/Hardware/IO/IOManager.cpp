@@ -8,33 +8,57 @@ IO::IO(QSharedPointer<CommunicationManager> communicator, QObject *parent)
 {
     // Test values
     // Variable outputs model
-    {
-    voModel_ = new Model(this);
 
-    QSharedPointer<IOItem> i1(new IOItem);
-    i1->setActive(true);
-    i1->setDescription("RPM");
-    i1->setAddress(255);
-    i1->setSetValue(0);
-    i1->setActualValue(0);
-    voModel_->insert(i1);
-    //
-    QSharedPointer<IOItem> i3(new IOItem);
-    i3->setActive(true);
-    i3->setDescription("TPS");
-    i3->setAddress(255);
-    i3->setSetValue(0);
-    i3->setActualValue(0);
-    voModel_->insert(i3);
-    //
-    QSharedPointer<IOItem> i2(new IOItem);
-    i2->setActive(true);
-    i2->setDescription("CLT");
-    i2->setAddress(255);
-    i2->setSetValue(0);
-    i2->setActualValue(0);
-    voModel_->insert(i2);
+    voModel_ = new Model(this);
+    {
+        QSharedPointer<IOItem> i (new IOItem);
+        i->setActive(true);
+        i->setDescription("IAT");
+        i->setAddress(255);
+        i->setSetValue(47);
+        i->setActualValue(47);
+        voModel_->insert(i);
     }
+
+    {
+        QSharedPointer<IOItem> i (new IOItem);
+        i->setActive(true);
+        i->setDescription("WBO2");
+        i->setAddress(255);
+        i->setSetValue(85);
+        i->setActualValue(85);
+        voModel_->insert(i);
+    }
+    {
+        QSharedPointer<IOItem> i (new IOItem);
+        i->setActive(true);
+        i->setDescription("MAT");
+        i->setAddress(255);
+        i->setSetValue(51);
+        i->setActualValue(51);
+        voModel_->insert(i);
+    }
+
+    {
+        QSharedPointer<IOItem> i (new IOItem);
+        i->setActive(true);
+        i->setDescription("CLT");
+        i->setAddress(255);
+        i->setSetValue(101);
+        i->setActualValue(101);
+        voModel_->insert(i);
+    }
+
+    {
+        QSharedPointer<IOItem> i (new IOItem);
+        i->setActive(true);
+        i->setDescription("TPS");
+        i->setAddress(255);
+        i->setSetValue(18);
+        i->setActualValue(18);
+        voModel_->insert(i);
+    }
+
 
     // Test values
     // Switchable outputs model
@@ -45,8 +69,8 @@ IO::IO(QSharedPointer<CommunicationManager> communicator, QObject *parent)
     so1->setActive(true);
     so1->setDescription("Trigger 1");
     so1->setAddress(255);
-    so1->setSetValue(0);
-    so1->setActualValue(0);
+    so1->setSetValue(1);
+    so1->setActualValue(1);
 
     QSharedPointer<IOItem> so2(new IOItem);
     so2->setActive(true);

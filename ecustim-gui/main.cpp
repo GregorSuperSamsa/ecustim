@@ -54,12 +54,12 @@ int main(int argc, char *argv[])
 
     QSharedPointer<IO> io( new IO(communicationManager));
 
-    Test test;
-    test.setCommunicator(communicationManager);
-    test.setIO(io);
+//    Test test;
+//    test.setCommunicator(communicationManager);
+//    test.setIO(io);
 
 #ifndef Q_OS_ANDROID
-    test.show();
+    //test.show();
 #endif
 
     QQuickStyle::setStyle("Material");

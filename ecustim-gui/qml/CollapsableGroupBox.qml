@@ -24,14 +24,27 @@ Item {
         anchors.fill: parent
         spacing: 0
 
-        RowLayout {
-            id: rowLayout
+        Rectangle {
+
             property int defaultHeight: 40
             Layout.fillWidth: true
             //Layout.preferredHeight: defaultHeight
             Layout.minimumHeight: defaultHeight
             Layout.maximumHeight: defaultHeight
             Layout.alignment: Qt.AlignTop
+            radius: 2
+            color: "transparent"
+            border.color: "white"
+
+        RowLayout {
+            id: rowLayout
+            anchors.fill: parent
+//            property int defaultHeight: 40
+//            Layout.fillWidth: true
+//            //Layout.preferredHeight: defaultHeight
+//            Layout.minimumHeight: defaultHeight
+//            Layout.maximumHeight: defaultHeight
+//            Layout.alignment: Qt.AlignTop
             spacing: 0
 
             RoundButton {
@@ -40,7 +53,7 @@ Item {
                 Layout.preferredWidth: height
                 flat: true
                 icon.source: minimized ? "qrc:/images/expand_more-black-24dp.svg" : "qrc:/images/expand_less-black-24dp.svg"
-                radius: 4
+                radius: 2
                 onClicked:
                 {
                     minimized = !minimized
@@ -78,7 +91,7 @@ Item {
                 Layout.fillHeight: true
                 Layout.preferredWidth: height
                 flat: true
-                radius: 4
+                radius: 2
                 icon.source: "qrc:/images/build-black-24dp.svg"
                 onClicked:
                     buttonClicked()
@@ -90,6 +103,7 @@ Item {
 //                }
             }
         }
+    }
 
         Item {
             implicitHeight: minimized ? 0 : childrenRect.height

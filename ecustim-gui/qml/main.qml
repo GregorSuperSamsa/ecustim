@@ -5,37 +5,40 @@ import QtGraphicalEffects 1.0
 import QtQuick.Controls.Material 2.3
 
 
-ApplicationWindow {
+ApplicationWindow
+{
     id: root
+    title: qsTr("Ecustim")
     visible: true
+
     width: 640
     height: 480
-    title: qsTr("Ecustim")
 
     Material.theme: Material.Dark
     Material.accent: Material.DeepOrange
 
-
-    ColumnLayout {
+    ColumnLayout
+    {
         anchors.fill: parent
         spacing: 0
 
-        RowLayout {
+        RowLayout
+        {
             id: menu
             Layout.alignment: Qt.AlignCenter
             spacing: 0
 
-            RoundButton {
+            RoundButton
+            {
                 id: buttonConnection
                 property int stackIndex: 3
                 icon.source: "qrc:/images/link-black-24dp.svg"
                 flat: true
-                radius: 3
+                radius: 2
                 icon.color: Material.foreground
                 display: AbstractButton.IconOnly
-                onClicked: {
+                onClicked:
                     menu.toggleButton(stackIndex)
-                }
             }
 
             RoundButton
@@ -45,12 +48,11 @@ ApplicationWindow {
                 icon.source: "qrc:/images/settings-black-24dp.svg"
 
                 flat: true
-                radius: 3
+                radius: 2
                 icon.color: Material.foreground
                 display: AbstractButton.IconOnly
-                onClicked: {
+                onClicked:
                     menu.toggleButton(stackIndex)
-                }
             }
 
             RoundButton
@@ -60,14 +62,14 @@ ApplicationWindow {
                 icon.source: "qrc:/images/compare_arrows-black-24dp.svg"
 
                 flat: true
-                radius: 3
+                radius: 2
                 icon.color: Material.foreground
                 display: AbstractButton.IconOnly
-                onClicked: {
+                onClicked:
                     menu.toggleButton(stackIndex)
-                }
             }
 
+            // Please, refacor this
             function toggleButton(selectedStackIndex)
             {
                 //

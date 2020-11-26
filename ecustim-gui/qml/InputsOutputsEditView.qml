@@ -7,53 +7,40 @@ Item
 {
     id: root
 
-//    color: "transparent"
-//    border.color: "red"
-//    border.width: 3
-
     ScrollView
     {
-
         anchors.fill: parent
         contentHeight: Math.max(root.height, columnLayout.implicitHeight)
-        //columnLayout.anchors.topMargin +
-        //columnLayout.anchors.bottomMargin +
-        //columnLayout.implicitHeight)
+        contentWidth: parent.width
         clip: true
         ScrollBar.vertical.interactive: true
 
+        ColumnLayout
+        {
+            id: columnLayout
+            anchors.fill: parent
+            anchors.leftMargin: 10
+            anchors.rightMargin: 10
+            spacing: 0
 
-                ColumnLayout {
-                    id: columnLayout
-                    //anchors.fill: parent
-                    width: root.width
-                    height: root.height
-                    spacing: 0
-
-                    Label {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: implicitHeight
-                        text: "Variable outputs"
-                        //elide: Text.ElideRight
-//                        background: Rectangle
-//                        {
-//                            anchors.fill: parent
-//                            color: "transparent"
-//                            border.width: 3
-//                            border.color: "orange"
-//                        }
-                    }
-
-
-            RowLayout {
+            Label
+            {
                 Layout.fillWidth: true
-                Layout.preferredHeight: implicitHeight
+                //Layout.preferredHeight: implicitHeight
+                text: "Variable outputs"
+            }
+
+            RowLayout
+            {
+                Layout.fillWidth: true
+                //Layout.preferredHeight: implicitHeight
                 spacing: 0
 
-                ComboBox {
+                ComboBox
+                {
                     id: combo
                     Layout.fillWidth: true
-                    Layout.preferredHeight: implicitHeight
+                    //Layout.preferredHeight: implicitHeight
 
                     spacing: 10
                     model: io.voModel
@@ -73,7 +60,7 @@ Item
                             width: height
                             anchors.right: parent.right
                             flat: true
-                            radius: 3
+                            radius: 2
                             icon.source: "qrc:/images/clear-black-24dp.svg"
                         }
                     }
@@ -86,7 +73,7 @@ Item
 
                     flat: true
                     icon.source: "qrc:/images/add-black-24dp.svg"
-                    radius: 3
+                    radius: 2
                     onClicked: {
                         //TODO
                     }
@@ -195,9 +182,6 @@ Item
                     second.value: 75
                 }
 
-
-
-
                 Label {
                     id: labelIdentifier
                     Layout.fillWidth: true
@@ -239,23 +223,7 @@ Item
                         text: "Save"
                     }
                 }
-
-                //            RoundButton {
-                //                id: buttonSave
-                //                Layout.alignment: Qt.AlignBottom | Qt.AlignHCenter
-                //                Layout.fillWidth: true
-                //                Layout.preferredHeight: implicitHeight
-                //                flat: true
-                //                icon.source: "qrc:/images/save-black-48dp.svg"
-                //                radius: 3
-                //                onClicked: { }
-                //            }
             }
-
-
         }
-
-
-
     }
 }
