@@ -32,6 +32,7 @@ Item
         Label {
             id: label
             Layout.alignment: Qt.AlignHCenter
+            Layout.bottomMargin: 5
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             text: caption

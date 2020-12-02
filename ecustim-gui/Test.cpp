@@ -8,6 +8,7 @@ Test::Test(QWidget *parent) :
     ui(new Ui::Test)
 {
     ui->setupUi(this);
+    hide();
 
     timer = new QTimer(this);
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(onTimeout()));

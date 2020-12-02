@@ -71,6 +71,7 @@ Item
             Layout.fillWidth: true
             Layout.preferredHeight: contentHeight
             Layout.topMargin: 5
+            Layout.bottomMargin: 5
 
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter

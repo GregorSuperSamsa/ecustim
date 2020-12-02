@@ -29,7 +29,8 @@ Item
             anchors.fill: parent
             anchors.leftMargin: 10
             anchors.rightMargin:  10
-            spacing: 5
+            anchors.bottomMargin:  0
+            spacing: 10
 
             // Variable outputs (i2c potentiometers)
             VariableOutputsView

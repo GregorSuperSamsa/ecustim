@@ -106,23 +106,23 @@ IO::IO(QSharedPointer<CommunicationManager> communicator, QObject *parent)
 
     QSharedPointer<IOItem> si1(new IOItem);
     si1->setActive(true);
-    si1->setDescription("Injector 1");
+    si1->setDescription("Inj bank 1");
     si1->setAddress(255);
     si1->setSetValue(0);
     si1->setActualValue(1);
 
     QSharedPointer<IOItem> si2(new IOItem);
     si2->setActive(true);
-    si2->setDescription("Launch control in");
+    si2->setDescription("Launch control");
     si2->setAddress(255);
     si2->setSetValue(0);
     si2->setActualValue(0);
 
     QSharedPointer<IOItem> si3(new IOItem);
     si3->setActive(true);
-    si3->setDescription("Test input 666");
+    si3->setDescription("Test");
     si3->setAddress(255);
-    si3->setSetValue(0);
+    si3->setSetValue(1);
     si3->setActualValue(1);
 
     QSharedPointer<IOItem> si4(new IOItem);

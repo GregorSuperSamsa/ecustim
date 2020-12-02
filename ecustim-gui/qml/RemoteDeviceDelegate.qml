@@ -10,7 +10,7 @@ DelegateModel {
 
     property int selectedIndex: -1
     property color selectedBackground:  Material.color(Material.Grey, Material.Shade700)
-    property color idleBackground:      Style.color.foreground
+    property color idleBackground:      "#404040"
 
     // Data model
     model: communicationManager.remoteDeviceModel
@@ -19,12 +19,12 @@ DelegateModel {
     delegate: Pane {
         property bool  expanded: false
         property bool  selected: selectedIndex == index
-
+//radius: 2
         id: pane
         implicitHeight: columnLayout.implicitHeight + topPadding + bottomPadding
         implicitWidth: parent.width
-        Material.background: selected ? selectedBackground : idleBackground
-        Material.elevation: 1
+       Material.background:  selected ? selectedBackground : idleBackground
+       Material.elevation: 1
 
         //        MouseArea {
         //            parent: pane
@@ -49,6 +49,7 @@ DelegateModel {
             id: columnLayout
             anchors.fill: parent
 
+
             RowLayout {
                 Layout.fillWidth: true
                 Layout.preferredHeight: implicitHeight
@@ -71,7 +72,7 @@ DelegateModel {
                     Layout.preferredWidth: height
 
                     flat: true
-                    radius: 4
+                    radius: 2
 
                     icon.source: item.connectionState === RemoteDevice.CONNECTED ? "qrc:/images/link-black-24dp.svg" : "qrc:/images/link_off-black-24dp.svg"
                     icon.color:  item.connectionState === RemoteDevice.CONNECTED ? Material.accent : Material.foreground
@@ -126,7 +127,7 @@ DelegateModel {
                     Layout.preferredWidth: height
                     flat: true
                     icon.source: expanded ?  "qrc:/images/expand_less-black-24dp.svg" : "qrc:/images/expand_more-black-24dp.svg"
-                    radius: 4
+                    radius: 2
                     MouseArea {
                         id:  buttonMoreMouseArea
                         anchors.fill: parent

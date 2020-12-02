@@ -1,15 +1,16 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
+import QtQuick.Controls.Material 2.3
 
 
-Item {
+Rectangle {
 
     //border.color: "yellow"
-    //color: "transparent"
+    color: "#404040"
 
     id: root
-
+radius: 2
     property int contentHeight: (height - rowLayout.implicitHeight)
     property alias content: rect.children
     property alias title: label.text
@@ -32,9 +33,9 @@ Item {
             Layout.minimumHeight: defaultHeight
             Layout.maximumHeight: defaultHeight
             Layout.alignment: Qt.AlignTop
-            radius: 2
+            //radius: 2
             color: "transparent"
-            border.color: "white"
+            //border.color: "white"
 
         RowLayout {
             id: rowLayout

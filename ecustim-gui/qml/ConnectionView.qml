@@ -14,24 +14,46 @@ Item
         anchors.fill: parent
         anchors.leftMargin: 10
         anchors.rightMargin:  10
+        anchors.bottomMargin: 10
         spacing: 0
+
+        ListView
+        {
+            id: list
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            spacing: 10
+
+            clip:true
+            flickableDirection: Flickable.VerticalFlick
+            boundsBehavior: Flickable.StopAtBounds
+            ScrollBar.vertical: ScrollBar {}
+
+            model: remoteDeviceDelegate
+
+            function clearSelection()
+            {
+                remoteDeviceDelegate.selectedIndex = -1;
+            }
+        }
+
 
         RowLayout
         {
             id: rowLayout
 
-            Layout.alignment: Qt.AlignHCenter
+            //Layout.alignment: Qt.AlignHCenter
             Layout.preferredHeight: implicitHeight
             Layout.fillWidth: true
 
             spacing: 0
 
-            Label {
-                Layout.preferredWidth: implicitWidth
-                Layout.preferredHeight: implicitHeight
-                id: connectionTypeLabel
-                text: qsTr("Connection type")
-            }
+//            Label {
+//                Layout.preferredWidth: implicitWidth
+//                Layout.preferredHeight: implicitHeight
+//                id: connectionTypeLabel
+//                text: qsTr("Connection type")
+//            }
 
             RadioButton
             {
@@ -55,26 +77,6 @@ Item
                 onClicked: {
                     communicationManager.setConnectionType(CommunicationManager.BLUETOOTH);
                 }
-            }
-        }
-
-        ListView
-        {
-            id: list
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            spacing: 10
-
-            clip:true
-            flickableDirection: Flickable.VerticalFlick
-            boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: ScrollBar {}
-
-            model: remoteDeviceDelegate
-
-            function clearSelection()
-            {
-                remoteDeviceDelegate.selectedIndex = -1;
             }
         }
 
