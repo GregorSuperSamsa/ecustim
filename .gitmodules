@@ -1,4 +1,0 @@
-[submodule "ecustim-firmware/src"]
-	path = ecustim-firmware/src
-	url = https://github.com/GregorSuperSamsa/Ardu-Stim
-	branch = ecustim-port
