@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "storage.h"
 #include "EEPROM.h"
 #include "wheel_defs.h"

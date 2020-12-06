@@ -18,17 +18,17 @@
  *
  */
 
+#include <Arduino.h>
+#include "comms.h"
 #include "defines.h"
 #include "ardustim.h"
 #include "enums.h"
-#include "comms.h"
-#include "structures.h"
 #include "storage.h"
 #include "wheel_defs.h"
 #include "user_defaults.h"
 
 
-extern wheels Wheels[];
+
 
 // Volatile variables (USED in ISR's)
 volatile uint8_t selected_wheel;
