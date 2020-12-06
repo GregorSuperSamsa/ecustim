@@ -1,10 +1,7 @@
+  GNU nano 4.8                       .gitignore                                 
 
 build-ecustim-*/
-
 *.user
-
 *.pro.user.*
-
 *gradle*
-
 *libs.xml
