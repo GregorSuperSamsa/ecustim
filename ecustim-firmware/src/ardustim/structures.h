@@ -22,10 +22,14 @@
 
 
 #include <Arduino.h>
-#include "ardustim.h"
 
 
-// Wheel pattern structure
+// Wheel pattern structure:
+//   decoder_name    - pointer to friendly name string;
+//   edge_states_ptr - pointer to edge array;
+//   rpm_scaler      - RPM scaler;
+//   wheel_max_edges - number of edges in the array;
+//   wheel_degrees   - whether the number of edges covers 360 or 720 degrees;
 typedef struct _wheels wheels;
 struct _wheels 
 {
@@ -35,19 +39,6 @@ struct _wheels
   const uint16_t wheel_max_edges;
   const uint16_t wheel_degrees;
 };
-
-template <typename T> void PROGMEM_readAnything (const T * sce, T& dest)
-{
-  memcpy_P (&dest, sce, sizeof (T));
-}
-
-template <typename T> T PROGMEM_getAnything (const T * sce)
-{
-  static T temp;
-  memcpy_P (&temp, sce, sizeof (T));
-  
-  return temp;
-}
 
 
 #endif

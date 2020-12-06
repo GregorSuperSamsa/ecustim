@@ -21,19 +21,10 @@
 #define __COMMS_H__
 
 
-void commandParser();
-void show_info_cb();
+void setup_serial();
+void communicate();
 void select_next_wheel_cb();
-void select_previous_wheel_cb();
-void toggle_invert_primary_cb();
-void toggle_invert_secondary_cb();
-void select_wheel_cb();
-void set_rpm_cb();
-void reverse_wheel_direction_cb();
 void setRPM(uint32_t);
-
-/* General functions */
-void serialSetup();
 void display_new_wheel();
 
 

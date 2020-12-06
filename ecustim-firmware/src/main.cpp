@@ -190,10 +190,11 @@ void setup_hardware()
   // Without this, the internal interrupt will not trigger.
   ADCSRA |= B00001000;
 
-//  pinMode(7, OUTPUT); /* Debug pin for Saleae to track sweep ISR execution speed */
+
   pinMode(8, OUTPUT); /* Primary (crank usually) output */
   pinMode(9, OUTPUT); /* Secondary (cam usually) output */
   pinMode(10, OUTPUT); /* Knock signal for seank, ony on LS1 pattern, NOT IMPL YET */
+
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
   pinMode(53, OUTPUT); 
   pinMode(52, OUTPUT); 
@@ -208,7 +209,7 @@ void setup_hardware()
 
 void setup() 
 {
-  serialSetup();
+  setup_serial();
 
   loadConfig();
 
@@ -223,7 +224,8 @@ void setup()
  * Reads ADC ports 0 and 1 alternately. Port 0 is RPM, Port 1 is for
  * future fun (possible wheel selection)
  */
-ISR(ADC_vect){
+ISR(ADC_vect)
+{
   if (analog_port == 0)
   {
     adc0 = ADCL | (ADCH << 8);
@@ -292,11 +294,8 @@ void loop()
 {
   uint16_t tmp_rpm = 0;
   
-  if(Serial.available() > 0) 
-  { 
-    commandParser(); 
-  }
-
+  communicate(); 
+  
   if(mode == POT_RPM)
   {
     if (adc0_read_complete == true)
