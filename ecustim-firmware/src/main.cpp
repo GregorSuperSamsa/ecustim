@@ -26,8 +26,6 @@
 #include "ardustim/storage.h"
 #include "ardustim/user_defaults.h"
 #include "ardustim/wheel_defs.h"
-#include <avr/pgmspace.h>
-#include <EEPROM.h>
 
 
 uint16_t wanted_rpm = 6000;                                                     
@@ -115,12 +113,9 @@ wheels Wheels[MAX_WHEELS] = {
   { Toyota_4AGZE_friendly_name, toyota_4AGZE, 0.333, 144, 720 },
 };
 
-void setup() 
+
+void setup_hardware()
 {
-  serialSetup();
-
-  loadConfig();
-
   cli(); // stop interrupts
 
   /* Configuring TIMER1 (pattern generator) */
@@ -209,8 +204,18 @@ void setup()
   ADCSRA |= B01000000;
   /* Make sure we are using the DEFAULT RPM on startup */
   reset_new_OCR1A(wanted_rpm); 
+}
 
-} // End setup
+void setup() 
+{
+  serialSetup();
+
+  loadConfig();
+
+  setup_hardware();
+}
+
+
 
 
 //! ADC ISR for alternating between ADC pins 0 and 1

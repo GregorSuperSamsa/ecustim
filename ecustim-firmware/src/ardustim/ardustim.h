@@ -23,7 +23,6 @@
 
 #include <stdint.h>
 #include "structures.h"
-#include <Arduino.h>
 
 
 int check_and_adjust_tcnt_limits(uint32_t *, uint32_t *);  

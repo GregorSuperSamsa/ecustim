@@ -20,9 +20,6 @@
 #ifndef __COMMS_H__
 #define __COMMS_H__
 
- 
-#include <Arduino.h>
-
 
 void commandParser();
 void show_info_cb();

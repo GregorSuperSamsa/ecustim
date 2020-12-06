@@ -21,8 +21,8 @@
 #define __STRUCTURES_H__
 
 
-#include "ardustim.h"
 #include <Arduino.h>
+#include "ardustim.h"
 
 
 // Wheel pattern structure
