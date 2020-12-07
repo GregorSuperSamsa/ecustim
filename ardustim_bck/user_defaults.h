@@ -21,7 +21,7 @@
 #define __USER_DEFAULTS_H__
  
 
-//#include "wheel_defs.h"
+#include "wheel_defs.h"
 
 
 extern uint16_t wanted_rpm;                                                     

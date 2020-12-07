@@ -25,7 +25,7 @@
 #include "ardustim/comms.h"
 #include "ardustim/storage.h"
 #include "ardustim/user_defaults.h"
-#include "ardustim/wheel_defs.h"
+#include "ardustim/TriggerPattern.h"
 
 
 uint16_t wanted_rpm = 6000;                                                     
@@ -204,19 +204,19 @@ ISR(ADC_vect)
 ISR(TIMER1_COMPA_vect) 
 {
   /* This is VERY simple, just walk the array and wrap when we hit the limit */
-  PORTB = output_invert_mask ^ pgm_read_byte(&Wheels[selected_wheel].edge_states_ptr[edge_counter]);   /* Write it to the port */
+  PORTB = output_invert_mask ^ pgm_read_byte(&triggerPattern.Wheels[selected_wheel].edge_states_ptr[edge_counter]);   /* Write it to the port */
   /* Normal direction  overflow handling */
   if (normal)
   {
     edge_counter++;
-    if (edge_counter == Wheels[selected_wheel].wheel_max_edges) {
+    if (edge_counter == triggerPattern.Wheels[selected_wheel].wheel_max_edges) {
       edge_counter = 0;
     }
   }
   else
   {
     if (edge_counter == 0)
-      edge_counter = Wheels[selected_wheel].wheel_max_edges;
+      edge_counter = triggerPattern.Wheels[selected_wheel].wheel_max_edges;
     edge_counter--;
   }
   /* The tables are in flash so we need pgm_read_byte() */
@@ -265,7 +265,7 @@ void reset_new_OCR1A(uint32_t new_rpm)
   uint32_t tmp;
   uint8_t bitshift;
   uint8_t tmp_prescaler_bits;
-  tmp = (uint32_t)(8000000.0/(Wheels[selected_wheel].rpm_scaler * (float)(new_rpm < 10 ? 10:new_rpm)));
+  tmp = (uint32_t)(8000000.0/(triggerPattern.Wheels[selected_wheel].rpm_scaler * (float)(new_rpm < 10 ? 10:new_rpm)));
 
   get_prescaler_bits(&tmp,&tmp_prescaler_bits,&bitshift);
 

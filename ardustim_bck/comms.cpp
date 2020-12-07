@@ -24,8 +24,8 @@
 #include "ardustim.h"
 #include "enums.h"
 #include "storage.h"
+#include "wheel_defs.h"
 #include "user_defaults.h"
-#include "TriggerPattern.h"
 
 
 
@@ -96,7 +96,7 @@ void communicate()
   case 'L':
     for (byte x = 0; x < MAX_WHEELS; x++)
     {
-      strcpy_P(buf, triggerPattern.Wheels[x].decoder_name);
+      strcpy_P(buf, Wheels[x].decoder_name);
       Serial.println(buf);
     }
     break;
@@ -127,26 +127,26 @@ void communicate()
 
   // Send the size of the current wheel
   case 'p':
-    Serial.println(triggerPattern.Wheels[selected_wheel].wheel_max_edges);
+    Serial.println(Wheels[selected_wheel].wheel_max_edges);
     break;
 
   // Send the pattern for the current wheel
   case 'P':
-    numTeeth = pgm_read_word(triggerPattern.Wheels[selected_wheel].wheel_max_edges);
+    numTeeth = pgm_read_word(Wheels[selected_wheel].wheel_max_edges);
 
-    for (uint16_t x = 0; x < triggerPattern.Wheels[selected_wheel].wheel_max_edges; ++x)
+    for (uint16_t x = 0; x < Wheels[selected_wheel].wheel_max_edges; ++x)
     {
       if (x != 0)
       {
         Serial.print(",");
       }
 
-      byte tempByte = pgm_read_byte(&triggerPattern.Wheels[selected_wheel].edge_states_ptr[x]);
+      byte tempByte = pgm_read_byte(&Wheels[selected_wheel].edge_states_ptr[x]);
       Serial.print(tempByte);
     }
     Serial.println("");
     // 2nd row of data sent is the number of degrees the wheel runs over (360 or 720 typically)
-    Serial.println(triggerPattern.Wheels[selected_wheel].wheel_degrees);
+    Serial.println(Wheels[selected_wheel].wheel_degrees);
     break;
 
   // Send the current RPM
@@ -170,7 +170,7 @@ void communicate()
   // Just a test method for switching the to the next wheel
   case 'X':
     select_next_wheel_cb();
-    strcpy_P(buf, triggerPattern.Wheels[selected_wheel].decoder_name);
+    strcpy_P(buf, Wheels[selected_wheel].decoder_name);
     Serial.println(buf);
     break;
 
