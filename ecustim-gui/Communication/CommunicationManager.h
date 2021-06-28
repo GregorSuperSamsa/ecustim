@@ -1,10 +1,12 @@
-#ifndef COMMUNICATION_MANAGER_H
-#define COMMUNICATION_MANAGER_H
+#ifndef COMMUNICATHardwareManagerN_MANAGER_H
+#define COMMUNICATHardwareManagerN_MANAGER_H
 
 #include <QObject>
 #include <QScopedPointer>
-#include "Communication/Bluetooth/Bluetooth.h"
-#include "Communication/Uart/Uart.h"
+#include <QTimer>
+#include <QQueue>
+#include "Bluetooth.h"
+#include "Uart.h"
 #include "UI/Model.h"
 
 
@@ -17,7 +19,6 @@ class CommunicationManager : public QObject
 
 public:
     explicit CommunicationManager(QObject *parent = nullptr);
-    void send(const QByteArray& data);
 
     Model* remoteDeviceModel() const;
 
@@ -27,7 +28,7 @@ public:
         BLUETOOTH = 0,
         USB_UART,
         CONNECTION_TYPE_UNKNOWN,
-        CONNECTION_TYPE_COUNT
+        CONNECTION_TYPE_COUNT,
     };
     Q_ENUM(CONNECTION_TYPE)
     CONNECTION_TYPE connectionType() const;
@@ -35,23 +36,40 @@ public:
     Q_INVOKABLE void connect(const QString& connectionInfo = "");
     Q_INVOKABLE void disconnect();
 
+    void send(const QByteArray& data);
+    void sendRaw(const QByteArray& rawData);
+
 private:
-    QScopedPointer<Communication> communicator;
+    QScopedPointer<Communication> _communicator;
+
+    static const  int PACKET_HANDLE_TIMEOUT_MS = 20;
+    QTimer _timer;
+
+    QQueue<QByteArray> txPackets;
+    QByteArray rxBuffer;
 
     // Current connection type
-    CONNECTION_TYPE connectionType_ = CONNECTION_TYPE_UNKNOWN;
+    CONNECTION_TYPE _connectionType = CONNECTION_TYPE_UNKNOWN;
 
-    QVector<QSharedPointer<Model>> models;
+    QVector<QSharedPointer<Model>> _models;
+
+    QByteArray composeTxPacket(const QByteArray &data) const;
 
 signals:
-    void triggerSamples(QByteArray samples);
     void connectionTypeChanged(CONNECTION_TYPE connectionType);
     void remoteDeviceModelChanged();
     //
     void remoteDeviceDiscoveryStarted();
     void remoteDeviceDiscoveryFinished();
+    //
+    void received(QByteArray data);
+
+private slots:
+    void onTimeout();
 
 public slots:
+    void onReceived(QByteArray data);
+
     void setConnectionType(CONNECTION_TYPE connectionType);
     void startRemoteDeviceDiscovery();
     void stopRemoteDeviceDiscovery();
@@ -61,4 +79,4 @@ public slots:
 
 };
 
-#endif // COMMUNICATION_MANAGER_H
+#endif // COMMUNICATHardwareManagerN_MANAGER_H

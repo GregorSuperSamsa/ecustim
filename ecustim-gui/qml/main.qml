@@ -57,7 +57,7 @@ ApplicationWindow
 
             RoundButton
             {
-                id: buttonVariableIO
+                id: buttonVariableHardwareManager
                 property int stackIndex: 1
                 icon.source: "qrc:/images/compare_arrows-black-24dp.svg"
 
@@ -84,26 +84,26 @@ ApplicationWindow
                     buttonTrigger.icon.color = Material.foreground
                 }
                 //
-                if (buttonVariableIO.stackIndex === selectedStackIndex) {
-                    //buttonVariableIO.icon.width = 48
-                    //buttonVariableIO.icon.height = 48
-                    buttonVariableIO.icon.color = Material.accent
+                if (buttonVariableHardwareManager.stackIndex === selectedStackIndex) {
+                    //buttonVariableHardwareManager.icon.width = 48
+                    //buttonVariableHardwareManager.icon.height = 48
+                    buttonVariableHardwareManager.icon.color = Material.accent
                 }
                 else {
-                    //buttonVariableIO.icon.width = 36
-                    //buttonVariableIO.icon.height = 36
-                    buttonVariableIO.icon.color = Material.foreground
+                    //buttonVariableHardwareManager.icon.width = 36
+                    //buttonVariableHardwareManager.icon.height = 36
+                    buttonVariableHardwareManager.icon.color = Material.foreground
                 }
                 //
-//                if (buttonVariableIOSettings.stackIndex === selectedStackIndex) {
-//                    //buttonVariableIOSettings.icon.width = 48
-//                    //buttonVariableIOSettings.icon.height = 48
-//                    buttonVariableIOSettings.icon.color = Material.accent
+//                if (buttonVariableHardwareManagerSettings.stackIndex === selectedStackIndex) {
+//                    //buttonVariableHardwareManagerSettings.icon.width = 48
+//                    //buttonVariableHardwareManagerSettings.icon.height = 48
+//                    buttonVariableHardwareManagerSettings.icon.color = Material.accent
 //                }
 //                else {
-//                    //buttonVariableIOSettings.icon.width = 36
-//                    //buttonVariableIOSettings.icon.height = 36
-//                    buttonVariableIOSettings.icon.color = Material.foreground
+//                    //buttonVariableHardwareManagerSettings.icon.width = 36
+//                    //buttonVariableHardwareManagerSettings.icon.height = 36
+//                    buttonVariableHardwareManagerSettings.icon.color = Material.foreground
 //                }
                 //
                 if (buttonConnection.stackIndex === selectedStackIndex) {

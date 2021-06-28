@@ -7,7 +7,7 @@ class RemoteDeviceItem : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(CONNECTION_STATE connectionState READ connectionState WRITE setConnectionState NOTIFY connectionStateChanged);
+    Q_PROPERTY(CONNECTHardwareManagerN_STATE connectionState READ connectionState WRITE setConnectionState NOTIFY connectionStateChanged);
     Q_PROPERTY(QString displayText READ displayText WRITE setDisplayText NOTIFY displayTextChanged)
     Q_PROPERTY(QString connectionString READ connectionString WRITE setConnectionString NOTIFY connectionStringChanged)
     Q_PROPERTY(QStringList additionalInfo READ additionalInfo WRITE setAdditionalInfo NOTIFY additionalInfoChanged)
@@ -16,7 +16,7 @@ public:
     explicit RemoteDeviceItem(QObject *parent = nullptr);
 
     //
-    enum CONNECTION_STATE
+    enum CONNECTHardwareManagerN_STATE
     {
         //CONNECTING = 0,
         CONNECTED,
@@ -24,7 +24,7 @@ public:
         UNCONNECTED,
         //UNKNOWN,
     };
-    Q_ENUM(CONNECTION_STATE)
+    Q_ENUM(CONNECTHardwareManagerN_STATE)
 
     QStringList additionalInfo() const
     {
@@ -41,7 +41,7 @@ public:
         return m_connectionString;
     }
 
-    CONNECTION_STATE connectionState() const
+    CONNECTHardwareManagerN_STATE connectionState() const
     {
         return m_connectionState;
     }
@@ -50,7 +50,7 @@ private:
     QString m_displayText;
     QStringList m_additionalInfo;
     QString m_connectionString;
-    CONNECTION_STATE m_connectionState = UNCONNECTED;
+    CONNECTHardwareManagerN_STATE m_connectionState = UNCONNECTED;
 
 public slots:
 
@@ -81,7 +81,7 @@ public slots:
         emit connectionStringChanged(m_connectionString);
     }
 
-    void setConnectionState(CONNECTION_STATE connectionState)
+    void setConnectionState(CONNECTHardwareManagerN_STATE connectionState)
     {
         if (m_connectionState == connectionState)
             return;
@@ -94,7 +94,7 @@ signals:
     void additionalInfoChanged(QStringList additionalInfo);
     void displayTextChanged(QString displayText);
     void connectionStringChanged(QString connectionString);
-    void connectionStateChanged(CONNECTION_STATE connectionState);
+    void connectionStateChanged(CONNECTHardwareManagerN_STATE connectionState);
 };
 
 #endif // DEVICEITEM_H

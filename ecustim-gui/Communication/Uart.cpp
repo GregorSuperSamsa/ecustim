@@ -2,7 +2,7 @@
 #include <QSerialPortInfo>
 #include <QDebug>
 
-#define DEBUG_LOG
+//#define DEBUG_LOG
 
 
 Uart::Uart(QObject *parent) : Communication(parent),
@@ -16,12 +16,21 @@ void Uart::initialize()
     if (isValid())
     {
         disconnect();
+
         // Set default settings
-        localDevice->setBaudRate(QSerialPort::Baud9600);
+        localDevice->setBaudRate(QSerialPort::Baud115200);
         localDevice->setDataBits(QSerialPort::Data8);
         localDevice->setParity(QSerialPort::NoParity);
         localDevice->setStopBits(QSerialPort::OneStop);
         localDevice->setFlowControl(QSerialPort::NoFlowControl);
+
+        // Problems with QSerialPort::readyRead signal not always emitted
+        QObject::connect(localDevice.data(), &QSerialPort::readyRead, this, &Uart::onReadyRead);
+        QObject::connect(localDevice.data(), &QSerialPort::errorOccurred, this, &Uart::onError);
+
+        QObject::connect(&timer, &QTimer::timeout, this, &Uart::onTimeout);
+        timer.setInterval(20);
+        //timer.start();
     }
 }
 
@@ -40,7 +49,7 @@ void Uart::connect(const QString& connectionInfo)
     if (isValid())
     {
 #ifdef DEBUG_LOG
-        qDebug() << endl << __PRETTY_FUNCTION__;
+        qDebug() << Qt::endl << __PRETTY_FUNCTION__;
         qDebug() << "Port:" << qPrintable(connectionInfo);
 #endif
         disconnect();
@@ -137,6 +146,47 @@ void Uart::stopRemoteDeviceDiscovery()
 // Send raw data to the remote device
 void Uart::send(const QByteArray& bytes)
 {
+//#ifdef DEBUG_LOG
+//    qDebug() << Qt::endl << __PRETTY_FUNCTION__;
+//    qDebug() << "ASCII:" << bytes;
+//    qDebug() << "HEX:  " << bytes.toHex();
+//#endif
+
     if (isConnected())
+    {
         localDevice->write(bytes);
+        //localDevice->flush();
+    }
+}
+
+void Uart::onReadyRead()
+{
+    if ( !isConnected()) return;
+
+    QByteArray bytes = localDevice->readAll();
+
+    if (bytes.isEmpty()) return;
+
+    emit received(bytes);
+
+#ifdef DEBUG_LOG
+    qDebug() << Qt::endl << __PRETTY_FUNCTION__;
+    qDebug() << qPrintable(bytes);
+    //qDebug() << "ASCII:" << bytes;
+    //qDebug() << "HEX:  " << bytes.toHex();
+#endif
+}
+
+void Uart::onTimeout()
+{
+    onReadyRead();
+}
+
+void Uart::onError(QSerialPort::SerialPortError error)
+{
+#ifdef DEBUG_LOG
+    qDebug() << Qt::endl << __PRETTY_FUNCTION__;
+    qDebug() << error;
+#endif
+    Q_UNUSED(error);
 }

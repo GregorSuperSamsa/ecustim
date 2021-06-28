@@ -6,17 +6,17 @@
 #include <QQuickStyle>
 #include "Test.h"
 #include "Communication/CommunicationManager.h"
-#include "Hardware/TriggerPattern/TriggerPatternManager.h"
-#include "Hardware/IO/IOManager.h"
+#include "Communication/ProtocolHandler.h"
+#include "Hardware/HardwareManager.h"
 
 
 #if defined (Q_OS_ANDROID)
 #include <QtAndroid>
 
-////TODO: Looks like ACCESS_BACKGROUND_LOCATION does not help, Location should be started manually
-//const QVector<QString> permissions({"android.permission.ACCESS_BACKGROUND_LOCATION",
-//                                    "android.permission.ACCESS_FINE_LOCATION",
-//                                    "android.permission.ACCESS_COARSE_LOCATION",
+////TODO: Looks like ACCESS_BACKGROUND_LOCATHardwareManagerN does not help, Location should be started manually
+//const QVector<QString> permissions({"android.permission.ACCESS_BACKGROUND_LOCATHardwareManagerN",
+//                                    "android.permission.ACCESS_FINE_LOCATHardwareManagerN",
+//                                    "android.permission.ACCESS_COARSE_LOCATHardwareManagerN",
 //                                    "android.permission.BLUETOOTH",
 //                                    "android.permission.BLUETOOTH_ADMIN",
 //                                    "android.permission.WRITE_EXTERNAL_STORAGE",
@@ -26,7 +26,6 @@
 
 int main(int argc, char *argv[])
 {
-
     //QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth* = true"));
     //#if defined (Q_OS_ANDROID)
     //    QLoggingCategory::setFilterRules(QStringLiteral("qt.bluetooth* = true"));
@@ -47,19 +46,19 @@ int main(int argc, char *argv[])
     //    }
     //#endif
 
+    //QSharedPointer<ProtocolHandler> protocolHandler(new ProtocolHandler);
 
-    QSharedPointer<CommunicationManager> communicationManager(new CommunicationManager);
+    QSharedPointer<CommunicationManager> communicationManager(new CommunicationManager());
 
-    TriggerPatternManager tg(communicationManager);
-
-    QSharedPointer<IO> io( new IO(communicationManager));
+    QSharedPointer<HardwareManager> hardwareManager(new HardwareManager(communicationManager));
 
     Test test;
+    //test.setProtocolHandler(protocolHandler);
     test.setCommunicator(communicationManager);
-    test.setIO(io);
+    test.setHardwareManager(hardwareManager);
 
 #ifndef Q_OS_ANDROID
-    //test.show();
+    test.show();
 #endif
 
     QQuickStyle::setStyle("Material");
@@ -82,8 +81,7 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<RemoteDeviceItem>("RemoteDevice", 1, 0, "RemoteDevice", "");
 
     engine.rootContext()->setContextProperty("communicationManager", communicationManager.data());
-    engine.rootContext()->setContextProperty("io", io.data());
-    engine.rootContext()->setContextProperty("triggerManager", &tg);
+    engine.rootContext()->setContextProperty("io", hardwareManager.data());
     engine.load(url);
 
     return app.exec();

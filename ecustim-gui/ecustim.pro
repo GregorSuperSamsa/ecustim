@@ -2,20 +2,21 @@ QT += quick serialport bluetooth widgets charts quickcontrols2 svg
 
 TARGET = ecustim-gui
 
-VERSION = 0.2
+VERSHardwareManagerN = 0.2
 
 CONFIG += c++17
 
 SOURCES += \
     Communication/Communication.cpp \
     Communication/CommunicationManager.cpp \
-    Communication/Bluetooth/Bluetooth.cpp \
+    Communication/Bluetooth.cpp \
+    #Communication/ProtocolHandler.cpp \
     Communication/RemoteDeviceItem.cpp \
-    Communication/Uart/Uart.cpp \
-    Hardware/IO/IOItem.cpp \
-    Hardware/IO/IOManager.cpp \
-    Hardware/TriggerPattern/TriggerPatternItem.cpp \
-    Hardware/TriggerPattern/TriggerPatternManager.cpp \
+    Communication/Uart.cpp \
+    Hardware/IOItem.cpp \
+    Hardware/HardwareManager.cpp \
+    Hardware/HardwareItem.cpp \
+    Hardware/TriggerPatternItem.cpp \
     UI/Model.cpp \
     Test.cpp \
     main.cpp
@@ -23,13 +24,15 @@ SOURCES += \
 HEADERS += \
     Communication/Communication.h \
     Communication/CommunicationManager.h \
-    Communication/Bluetooth/Bluetooth.h \
+    Communication/Bluetooth.h \
+    Communication/Protocol.h \
+    #Communication/ProtocolHandler.h \
     Communication/RemoteDeviceItem.h \
-    Communication/Uart/Uart.h \
-    Hardware/IO/IOItem.h \
-    Hardware/IO/IOManager.h \
-    Hardware/TriggerPattern/TriggerPatternItem.h \
-    Hardware/TriggerPattern/TriggerPatternManager.h \
+    Communication/Uart.h \
+    Hardware/IOItem.h \
+    Hardware/HardwareManager.h \
+    Hardware/HardwareItem.h \
+    Hardware/TriggerPatternItem.h \
     UI/Model.h \
     Test.h
 

@@ -20,10 +20,10 @@ Bluetooth::Bluetooth(QObject *parent): Communication(parent),
 Bluetooth::~Bluetooth()
 {
 #ifdef DEBUG_LOG
-    qDebug() << endl << __PRETTY_FUNCTION__;
+    qDebug() << Qt::endl << __PRETTY_FUNCTION__;
 #endif
-    stopRemoteDeviceDiscovery();
-    disconnect();
+    //stopRemoteDeviceDiscovery();
+    //disconnect();
 }
 
 // Initialize the communication interface
@@ -69,7 +69,7 @@ void Bluetooth::connect(const QString& connectionInfo)
     if (isValid())
     {
 #ifdef DEBUG_LOG
-        qDebug() << endl << __PRETTY_FUNCTION__;
+        qDebug() << Qt::endl << __PRETTY_FUNCTION__;
         qDebug() << "Device address:" << qPrintable(connectionInfo);
 #endif
         // Stop any active discovery
@@ -108,7 +108,7 @@ void Bluetooth::disconnect()
             {
                 QThread::msleep(UNCONNECTED_TIMEOUT_MS);
 #ifdef DEBUG_LOG
-                qDebug() << endl << __PRETTY_FUNCTION__;
+                qDebug() << Qt::endl << __PRETTY_FUNCTION__;
                 qDebug() << "Socket gracefully closed . . .";
 #endif
                 return;
@@ -118,7 +118,7 @@ void Bluetooth::disconnect()
         // Just in case we were unable to close the socket
         socket->abort();
 #ifdef DEBUG_LOG
-        qDebug() << endl << __PRETTY_FUNCTION__;
+        qDebug() << Qt::endl << __PRETTY_FUNCTION__;
         qDebug() << "Socket aborted . . .";
 #endif
 
@@ -137,7 +137,7 @@ void Bluetooth::startRemoteDeviceDiscovery()
     if (isValid())
     {
 #ifdef DEBUG_LOG
-        qDebug() << endl << __PRETTY_FUNCTION__;
+        qDebug() << Qt::endl << __PRETTY_FUNCTION__;
 #endif
 
         // Start device discovery
@@ -185,11 +185,13 @@ void Bluetooth::stopRemoteDeviceDiscovery()
 // Send raw data to the remote device
 void Bluetooth::send(const QByteArray& bytes)
 {
-    Q_UNUSED(bytes)
+#ifdef DEBUG_LOG
+    qDebug() << Qt::endl << __PRETTY_FUNCTION__;
+#endif
 
     if (isConnected())
     {
-        //
+        socket->write(bytes);
     }
 
 }
@@ -218,7 +220,7 @@ void Bluetooth::initializeRemoteDeviceDiscovery()
 void Bluetooth::onServiceDiscovered(const QBluetoothServiceInfo &info)
 {
 #ifdef DEBUG_LOG
-    qDebug() << endl << __PRETTY_FUNCTION__;
+    qDebug() << Qt::endl << __PRETTY_FUNCTION__;
     qDebug() << "Device name:   " << qPrintable(info.device().name());
     qDebug() << "Device address:" << qPrintable(info.device().address().toString());
     qDebug() << "RSSI:          " << info.device().rssi();
@@ -240,12 +242,12 @@ void Bluetooth::onServiceDiscoveryFinished()
 void Bluetooth::onDeviceDiscovered(const QBluetoothDeviceInfo &info)
 {
 #ifdef DEBUG_LOG
-    qDebug() << endl << __PRETTY_FUNCTION__;
+    qDebug() << Qt::endl << __PRETTY_FUNCTION__;
     qDebug() << "Device name:   " << qPrintable(info.name());
     qDebug() << "Device address:" << qPrintable(info.address().toString());
     qDebug() << "RSSI:          " << info.rssi();
     QList<QBluetoothUuid> uuids  =  info.serviceUuids();
-    for(QBluetoothUuid uuid: uuids)
+    for(const QBluetoothUuid &uuid: uuids)
         qDebug() << "UUID:          " << uuid.toString();
 #endif
 
@@ -260,7 +262,7 @@ void Bluetooth::onDeviceDiscoveryFinished()
 void Bluetooth::onDeviceConnected(QBluetoothAddress address)
 {
 #ifdef DEBUG_LOG
-    qDebug() << endl << __PRETTY_FUNCTION__;
+    qDebug() << Qt::endl << __PRETTY_FUNCTION__;
     qDebug() << "Device address:" << qPrintable(address.toString());
 #endif
 
@@ -270,7 +272,7 @@ void Bluetooth::onDeviceConnected(QBluetoothAddress address)
 void Bluetooth::onDeviceDisconnected(QBluetoothAddress address)
 {
 #ifdef DEBUG_LOG
-    qDebug() << endl << __PRETTY_FUNCTION__;
+    qDebug() << Qt::endl << __PRETTY_FUNCTION__;
     qDebug() << "Device address:" << qPrintable(address.toString());
 #endif
 
@@ -326,7 +328,7 @@ QSharedPointer<RemoteDeviceItem> Bluetooth::processRemoteDeviceInfo(const QBluet
     // RSSI
     additionalInfo << "RSSI:" << QString::number(deviceInfo.rssi());
     // UUIDs
-    for(auto UUID: deviceInfo.serviceUuids())
+    for(const auto &UUID: deviceInfo.serviceUuids())
         additionalInfo << "UUID:" << UUID.toString();
 
     item->setAdditionalInfo(additionalInfo);
@@ -343,27 +345,30 @@ QSharedPointer<RemoteDeviceItem> Bluetooth::processRemoteDeviceInfo(const QBluet
 void Bluetooth::onHostModeStateChanged(QBluetoothLocalDevice::HostMode mode)
 {
 #ifdef DEBUG_LOG
-    qDebug() << endl << __PRETTY_FUNCTION__;
+    qDebug() << Qt::endl << __PRETTY_FUNCTION__;
     qDebug() << mode;
 #endif
 }
 
 void Bluetooth::onSocketReadyRead()
 {
+    QByteArray bytes = socket->readAll();
+
 #ifdef DEBUG_LOG
-    qDebug() << endl << __PRETTY_FUNCTION__;
+        qDebug() << qPrintable(bytes);
+        qDebug() << Qt::endl << __PRETTY_FUNCTION__;
 #endif
 
-    QByteArray rx = socket->readAll();
-    qDebug() << qPrintable(rx);
-
-    socket->write(rx);
+    if (!bytes.isEmpty())
+    {
+        emit received(bytes);
+    }
 }
 
 void Bluetooth::onSocketStateChanged(QBluetoothSocket::SocketState state)
 {
 #ifdef DEBUG_LOG
-    qDebug() << endl << __PRETTY_FUNCTION__;
+    qDebug() << Qt::endl << __PRETTY_FUNCTION__;
     qDebug() << state;
 #endif
 
@@ -383,7 +388,7 @@ void Bluetooth::onSocketStateChanged(QBluetoothSocket::SocketState state)
 void Bluetooth::onSocketError(QBluetoothSocket::SocketError error)
 {
 #ifdef DEBUG_LOG
-    qDebug() << endl << __PRETTY_FUNCTION__;
+    qDebug() << Qt::endl << __PRETTY_FUNCTION__;
     qDebug() << error;
 #endif
 }

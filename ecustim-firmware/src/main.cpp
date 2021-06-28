@@ -17,18 +17,14 @@
  * along with any ArduStim software.  If not, see http://www.gnu.org/licenses/
  *
  */
-
 #include <Arduino.h>
-// #include "ardustim/defines.h"
-// #include "ardustim/ardustim.h"
-// #include "ardustim/enums.h"
- #include "ardustim/comms.h"
- #include "ardustim/storage.h"
-// #include "ardustim/user_defaults.h"
+#include "ardustim/storage.h"
 #include "ardustim/TriggerPattern.h"
+#include "ardustim/Communicator.h"
+#include "Packet.h"
+#include "Protocol.h"
 
-
-//uint16_t wanted_rpm = 6000;                                                     
+//uint16_t wanted_rpm = 6000;
 
 // Sensistive stuff used in ISR's
 volatile uint8_t fraction = 0;
@@ -45,7 +41,7 @@ volatile bool adc1_read_complete = false;
 // volatile bool normal = true;
 
 // // Don't invert anything
-// volatile uint8_t output_invert_mask = 0x00; 
+// volatile uint8_t output_invert_mask = 0x00;
 
 // volatile uint8_t prescaler_bits = 0;
 // volatile uint8_t last_prescaler_bits = 0;
@@ -56,20 +52,24 @@ volatile bool adc1_read_complete = false;
 // Less sensitive globals
 uint8_t bitshift = 0;
 
+uint8_t tx_data_buffer[1024];
+uint8_t rx_data_buffer[64];
 
-void setup() 
+Packet tx(tx_data_buffer, 1024);
+Packet rx(rx_data_buffer, 64);
+
+Communicator communicator(&rx, &tx);
+TriggerPattern triggerPattern(&rx, &tx);
+
+void setup()
 {
-  setup_serial();
+   
 
-triggerPattern.begin();
+    communicator.begin();
+    triggerPattern.begin();
 
-  loadConfig();
-
-  
+    loadConfig();
 }
-
-
-
 
 //! ADC ISR for alternating between ADC pins 0 and 1
 /*!
@@ -78,37 +78,37 @@ triggerPattern.begin();
  */
 ISR(ADC_vect)
 {
-  if (analog_port == 0)
-  {
-    adc0 = ADCL | (ADCH << 8);
-	  adc0_read_complete = true;
-    /* Flip to channel 1 */
-    //ADMUX |= B00000001;
-    //analog_port = 1;
-    /* Trigger another conversion */
-    //ADCSRA |= B01000000;
-    return;
-  } 
-//  if (analog_port == 1)
-//  {
-//    adc1 = ADCL | (ADCH << 8);
-//	adc1_read_complete = true;
-//    /* Flip to channel 0 */
-//    /* Tell it to read ADC0, clear MUX0..3 */
-//    ADMUX &= B11110000;
-//    analog_port = 0;
-//    /* Trigger another conversion */
-//    ADCSRA |= B01000000;
-//    return;
-//  }
+    if (analog_port == 0)
+    {
+        adc0 = ADCL | (ADCH << 8);
+        adc0_read_complete = true;
+        /* Flip to channel 1 */
+        //ADMUX |= B00000001;
+        //analog_port = 1;
+        /* Trigger another conversion */
+        //ADCSRA |= B01000000;
+        return;
+    }
+    //  if (analog_port == 1)
+    //  {
+    //    adc1 = ADCL | (ADCH << 8);
+    //	adc1_read_complete = true;
+    //    /* Flip to channel 0 */
+    //    /* Tell it to read ADC0, clear MUX0..3 */
+    //    ADMUX &= B11110000;
+    //    analog_port = 0;
+    //    /* Trigger another conversion */
+    //    ADCSRA |= B01000000;
+    //    return;
+    //  }
 }
 
-// /* Pumps the pattern out of flash to the port 
+// /* Pumps the pattern out of flash to the port
 //  * The rate at which this runs is dependent on what OCR1A is set to
 //  * the sweeper in timer2 alters this on the fly to alow changing of RPM
 //  * in a very nice way
 //  */
-// ISR(TIMER1_COMPA_vect) 
+// ISR(TIMER1_COMPA_vect)
 // {
 //   /* This is VERY simple, just walk the array and wrap when we hit the limit */
 //   PORTB = output_invert_mask ^ pgm_read_byte(&triggerPattern.Wheels[selected_wheel].edge_states_ptr[edge_counter]);   /* Write it to the port */
@@ -136,35 +136,41 @@ ISR(ADC_vect)
 //     TCCR1B |= prescaler_bits;
 //     reset_prescaler = false;
 //   }
-  
+
 //   // Reset next compare value for RPM changes
 //   // Apply new "RPM" from Timer2 ISR, i.e. speed up/down the virtual "wheel"
-//   OCR1A = new_OCR1A;  
+//   OCR1A = new_OCR1A;
 // }
 
-void loop() 
+void loop()
 {
-  // uint16_t tmp_rpm = 0;
-  
-  // //communicate(); 
-  
-  // if(mode == POT_RPM)
-  // {
-  //   if (adc0_read_complete == true)
-  //   {
-  //     adc0_read_complete = false;
-  //     tmp_rpm = adc0 << TMP_RPM_SHIFT;
-  //     if (tmp_rpm > TMP_RPM_CAP) 
-  //     { 
-  //       tmp_rpm = TMP_RPM_CAP; 
-  //     }
-  //     wanted_rpm = tmp_rpm;
-  //     //reset_new_OCR1A(tmp_rpm);
-  //   }
-  // }
+    communicator.processCommands();
 
-  
+    triggerPattern.processCommands();
+    
 
+
+    
+    
+  
+    // uint16_t tmp_rpm = 0;
+
+    // //communicate();
+
+    // if(mode == POT_RPM)
+    // {
+    //   if (adc0_read_complete == true)
+    //   {
+    //     adc0_read_complete = false;
+    //     tmp_rpm = adc0 << TMP_RPM_SHIFT;
+    //     if (tmp_rpm > TMP_RPM_CAP)
+    //     {
+    //       tmp_rpm = TMP_RPM_CAP;
+    //     }
+    //     wanted_rpm = tmp_rpm;
+    //     //reset_new_OCR1A(tmp_rpm);
+    //   }
+    // }
 }
 
 // void reset_new_OCR1A(uint32_t new_rpm)
@@ -176,9 +182,9 @@ void loop()
 
 //   get_prescaler_bits(&tmp,&tmp_prescaler_bits,&bitshift);
 
-//   new_OCR1A = (uint16_t)(tmp >> bitshift); 
+//   new_OCR1A = (uint16_t)(tmp >> bitshift);
 //   prescaler_bits = tmp_prescaler_bits;
-//   reset_prescaler = true; 
+//   reset_prescaler = true;
 // }
 
 // uint8_t get_bitshift_from_prescaler(uint8_t *prescaler_bits)

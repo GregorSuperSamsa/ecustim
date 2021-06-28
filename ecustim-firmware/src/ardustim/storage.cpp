@@ -2,8 +2,6 @@
 #include "storage.h"
 #include "EEPROM.h"
 #include "wheel_defs.h"
-#include "user_defaults.h"
-#include "ardustim.h"
 #include "enums.h"
 
 void loadConfig()
