@@ -38,9 +38,6 @@ public:
     // Stop discovering currently available remote devices
     void stopRemoteDeviceDiscovery();
 
-    // Send raw data to the remote device
-    void send(const QByteArray& bytes);
-
 private:
     enum DISCOVERY_TYPE
     {
@@ -58,6 +55,10 @@ private:
     QScopedPointer<QBluetoothDeviceDiscoveryAgent> deviceAgent;
     QScopedPointer<QBluetoothServiceDiscoveryAgent> serviceAgent;
     QScopedPointer<QBluetoothSocket> socket;
+
+public slots:
+    // Send raw data to the remote device
+    void send(const QByteArray& bytes);
 
 private slots:
     //

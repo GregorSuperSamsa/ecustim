@@ -5,7 +5,8 @@
 #include <QtCharts/QAbstractSeries>
 #include <QTimer>
 #include "Communication/CommunicationManager.h"
-#include "Hardware/IO/IOManager.h"
+#include "Communication/ProtocolHandler.h"
+#include "Hardware/HardwareManager.h"
 
 
 namespace Ui {
@@ -20,13 +21,15 @@ public:
     explicit Test(QWidget *parent = nullptr);
     ~Test();
 
+    void setProtocolHandler(QSharedPointer<ProtocolHandler> protocolHandler);
     void setCommunicator(QSharedPointer<CommunicationManager> communicator);
-    void setIO(QSharedPointer<IO> io);
+    void setHardwareManager(QSharedPointer<HardwareManager> hardwareManager);
 
 private:
     Ui::Test *ui;
+    QSharedPointer<ProtocolHandler> protocolHandler;
     QSharedPointer<CommunicationManager> communicator;
-    QSharedPointer<IO> io;
+    QSharedPointer<HardwareManager> hardwareManager;
     QTimer* timer;
 
 public slots:

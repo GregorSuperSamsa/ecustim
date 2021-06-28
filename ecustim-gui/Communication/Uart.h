@@ -2,6 +2,7 @@
 #define UART_H
 
 #include <QSerialPort>
+#include <QTimer>
 #include "Communication/Communication.h"
 #include "Communication/RemoteDeviceItem.h"
 
@@ -34,11 +35,18 @@ public:
     // Stop discovering currently available remote devices
     void stopRemoteDeviceDiscovery();
 
+private:
+    QScopedPointer<QSerialPort> localDevice;
+    QTimer timer;
+
+public slots:
     // Send raw data to the remote device
     void send(const QByteArray& bytes);
 
-private:
-    QScopedPointer<QSerialPort> localDevice;
+private slots:
+    void onReadyRead();
+    void onTimeout();
+    void onError(QSerialPort::SerialPortError error);
 
 };
 

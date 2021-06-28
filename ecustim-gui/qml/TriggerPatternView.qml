@@ -20,7 +20,7 @@ Item
             id: combo
             Layout.fillWidth: true
             Layout.preferredHeight: implicitHeight
-            model: triggerManager.model
+            model: hardwareManager.triggerPatternModel
 
             Material.elevation: 1
 
@@ -29,7 +29,7 @@ Item
             {
                 id: control
                 width: combo.width
-                text: item.name
+                text: item.description
                 highlighted: (combo.currentIndex === index)
 
 

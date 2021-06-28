@@ -62,7 +62,7 @@
  #include <avr/pgmspace.h>
 
 
-// Wheel pattern structure:
+// Wheels pattern structure:
 //   decoder_name    - pointer to friendly name string;
 //   edge_states_ptr - pointer to edge array;
 //   rpm_scaler      - RPM scaler;

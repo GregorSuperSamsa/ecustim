@@ -1,41 +1,15 @@
 #include "TriggerPattern.h"
+#include "Protocol.h"
+#include "Communicator.h"
 
-volatile TriggerPattern::ROTATION TriggerPattern::_rotation = TriggerPattern::ROTATION::CLOCKWISE;
-TriggerPattern triggerPattern;
-TriggerPattern::TriggerPattern()
-{
-    triggerPattern = *this;
-}
+TriggerPattern* TriggerPattern::triggerPattern = nullptr;
+volatile TriggerPattern::ROTATION_DIRECTION TriggerPattern::rotation_direction = TriggerPattern::ROTATION_DIRECTION::CLOCKWISE;
 
-void TriggerPattern::setCurrent(const uint8_t &index)
+TriggerPattern::TriggerPattern(Packet *rx, Packet *tx)
 {
-    if ((_current_index != index) && ((index <= PATTERNS_COUNT)))
-    {
-        _current_index = index;
-    }
-}
-
-uint8_t TriggerPattern::current() const
-{
-    return _current_index;
-}
-
-void TriggerPattern::setRpm(const uint32_t &rpm)
-{
-    if (_rpm != rpm)
-    {
-        _rpm = rpm;
-    }
-}
-
-uint32_t TriggerPattern::rpm() const
-{
-    return _rpm;
-}
-
-const char *TriggerPattern::name() const
-{
-    return _patterns[_current_index].decoder_name;
+    this->rx = rx;
+    this->tx = tx;
+    triggerPattern = this;
 }
 
 void TriggerPattern::begin()
@@ -130,38 +104,230 @@ void TriggerPattern::begin()
     reset_new_OCR1A(wanted_rpm);
 }
 
-void TriggerPattern::setRotation(const TriggerPattern::ROTATION &rotation)
+void TriggerPattern::processCommands()
 {
-    if (_rotation != rotation)
+    if (nullptr == tx || nullptr == rx || !rx->pending() || !(Command::TRIGGER_PATTERN_CMD_MASK == rx->commandType()))
     {
-        _rotation = rotation;
+        return;
+    }
+
+    switch (rx->command())
+    {
+    case Command::TRIGGER_PATTERN_INDEX:
+        processCommandIndex();
+        break;
+    case Command::TRIGGER_PATTERN_NAME:
+        processCommandName();
+        break;
+    case Command::TRIGGER_PATTERN_DATA:
+        processCommandData();
+        break;
+    case Command::TRIGGER_PATTERN_DEGREES:
+        processCommandDegrees();
+        break;
+    case Command::TRIGGER_PATTERN_ROTATION:
+        processCommandRotation();
+        break;
+    case Command::TRIGGER_PATTERN_RPM:
+        processCommandRpm();
+        break;
+    case Command::TRIGGER_PATTERN_COUNT:
+        processCommandCount();
+        break;
+    case Command::TRIGGER_PATTERN_ENABLE:
+        processCommandEnable();
+        break;
+    default:
+        break;
+    }
+
+    rx->reset();
+}
+
+void TriggerPattern::processCommandIndex()
+{
+    if (rx->hardwareIndex() < PATTERNS_COUNT)
+    {
+        if (Operation::WRITE == rx->operation())
+        {
+            pattern_index = rx->hardwareIndex();
+        }
+    }
+
+    tx->setHardwareIndex(pattern_index);
+    tx->setCommand(rx->command());
+    tx->setOperation(rx->operation());
+}
+
+void TriggerPattern::processCommandName()
+{
+    if (rx->hardwareIndex() < PATTERNS_COUNT)
+    {
+        if (Operation::READ == rx->operation())
+        {
+            const char *p = _patterns[rx->hardwareIndex()].decoder_name;
+            uint8_t byte = 0;
+            
+            while ((byte = pgm_read_byte(p++)))
+            {
+                if (!tx->appendData(&byte, 1))
+                {
+                    break;
+                }
+            }
+            
+            tx->setHardwareIndex(rx->hardwareIndex());
+            tx->setCommand(rx->command());
+            tx->setOperation(rx->operation());
+        }
     }
 }
 
-TriggerPattern::ROTATION TriggerPattern::rotation() const
+void TriggerPattern::processCommandData()
 {
-    return _rotation;
+    if (rx->hardwareIndex() < PATTERNS_COUNT)
+    {
+        if (Operation::READ == rx->operation())
+        {
+            const unsigned char *p = _patterns[rx->hardwareIndex()].edge_states_ptr;
+            
+            if (tx->appendData(p, _patterns[rx->hardwareIndex()].wheel_max_edges, true))
+            {
+                tx->setHardwareIndex(rx->hardwareIndex());
+                tx->setCommand(rx->command());
+                tx->setOperation(rx->operation());
+            }
+        }
+    }
 }
 
-volatile uint8_t TriggerPattern::_current_index = 0;
-uint32_t TriggerPattern::_rpm = 1200;
-volatile uint8_t TriggerPattern::output_invert_mask = 0x00;
+void TriggerPattern::processCommandDegrees()
+{
+    if (rx->hardwareIndex() < PATTERNS_COUNT)
+    {
+        if (Operation::READ == rx->operation())
+        {
+            if (tx->appendData(&_patterns[rx->hardwareIndex()].wheel_degrees, sizeof(uint16_t), true))
+            {
+                tx->setHardwareIndex(rx->hardwareIndex());
+                tx->setCommand(rx->command());
+                tx->setOperation(rx->operation());
+            }
+        }
+    }
+}
+void TriggerPattern::processCommandRotation()
+{
+    if (rx->hardwareIndex() == pattern_index)
+    {
+        uint8_t value = 0;
+
+        if (Operation::WRITE == rx->operation())
+        {
+            if (rx->getDataBytesCount() > 0)
+            {
+                uint8_t value = rx->getDataPointer()[0];
+                if (ROTATION_DIRECTION::CLOCKWISE == value 
+                || ROTATION_DIRECTION::COUNTERCLOCKWISE == value)
+                {
+                    rotation_direction = (ROTATION_DIRECTION)(value);
+                }
+            }
+        }
+        
+        value = (uint8_t)rotation_direction;
+        if (tx->appendData(&value, 1))
+        {
+            tx->setHardwareIndex(rx->hardwareIndex());
+            tx->setCommand(rx->command());
+            tx->setOperation(rx->operation());
+        }
+    }
+}
+
+void TriggerPattern::processCommandRpm()
+{
+    if (rx->hardwareIndex() == pattern_index)
+    {
+        if (Operation::WRITE == rx->operation())
+        {
+            if (rx->getDataBytesCount() > 1)
+            {
+                uint16_t value =  (uint16_t)(rx->getDataPointer()[0] << 8) & rx->getDataPointer()[1];
+
+                if (value < min_rpm)
+                {
+                    value = min_rpm;
+                }
+                else if (value > max_rpm)
+                {
+                    value = max_rpm;
+                }
+                
+                rpm = value;
+            }
+        }
+        
+        if (tx->appendData(&rpm, 2))
+        {
+            tx->setHardwareIndex(rx->hardwareIndex());
+            tx->setCommand(rx->command());
+            tx->setOperation(rx->operation());
+        }
+    }
+}
+
+void TriggerPattern::processCommandCount()
+{
+    uint8_t value = PATTERNS_COUNT;
+
+    if (tx->appendData(&value, 1))
+    {
+        tx->setHardwareIndex(pattern_index);
+        tx->setCommand(rx->command());
+        tx->setOperation(rx->operation());
+    }
+}
+
+void TriggerPattern::processCommandEnable()
+{
+    if (rx->hardwareIndex() == pattern_index)
+    {
+        if (Operation::WRITE == rx->operation())
+        {
+            if (rx->getDataBytesCount() > 0)
+            {
+                enabled = (bool)(rx->getDataPointer()[0]);
+            }
+        }
+
+        if (tx->appendData(&enabled, 1))
+        {
+            tx->setHardwareIndex(pattern_index);
+            tx->setCommand(rx->command());
+            tx->setOperation(rx->operation());
+        }
+    }
+}
+
+volatile uint8_t TriggerPattern::pattern_index = 0;
+uint16_t TriggerPattern::rpm = 1200;
 volatile uint8_t TriggerPattern::prescaler_bits = 0;
 volatile uint8_t TriggerPattern::last_prescaler_bits = 0;
-volatile uint8_t TriggerPattern::mode = 0;
 volatile uint16_t TriggerPattern::new_OCR1A = 5000; /* sane default */
 volatile bool TriggerPattern::reset_prescaler = false;
 uint16_t TriggerPattern::wanted_rpm = 6000;
 
 void TriggerPattern::reset_new_OCR1A(uint32_t new_rpm)
 {
-    
+    /*  */
     uint32_t tmp;
     uint8_t bitshift;
     uint8_t tmp_prescaler_bits;
-    tmp = (uint32_t)(8000000.0 / (Wheels[_current_index].rpm_scaler * (float)(new_rpm < 10 ? 10 : new_rpm)));
 
-    triggerPattern.get_prescaler_bits(&tmp, &tmp_prescaler_bits, &bitshift);
+    tmp = (uint32_t)(8000000.0 / (Wheels[pattern_index].rpm_scaler * (float)(new_rpm < 10 ? 10 : new_rpm)));
+
+    triggerPattern->get_prescaler_bits(&tmp, &tmp_prescaler_bits, &bitshift);
 
     new_OCR1A = (uint16_t)(tmp >> bitshift);
     prescaler_bits = tmp_prescaler_bits;
@@ -196,8 +362,6 @@ uint8_t TriggerPattern::get_bitshift_from_prescaler(uint8_t *prescaler_bits)
     return 0;
 }
 
-
-
 // Gets prescaler enum and bitshift based on OC value
 void TriggerPattern::get_prescaler_bits(uint32_t *potential_oc_value, uint8_t *prescaler, uint8_t *bitshift)
 {
@@ -228,7 +392,6 @@ void TriggerPattern::get_prescaler_bits(uint32_t *potential_oc_value, uint8_t *p
     }
 }
 
-
 /* Pumps the pattern out of flash to the port 
  * The rate at which this runs is dependent on what OCR1A is set to
  * the sweeper in timer2 alters this on the fly to alow changing of RPM
@@ -237,30 +400,30 @@ void TriggerPattern::get_prescaler_bits(uint32_t *potential_oc_value, uint8_t *p
 
 void TriggerPattern::timer1Handler()
 {
-    static volatile uint16_t edge_counter = 0;
-   
-Serial.println(edge_counter);
+    static uint16_t edge_counter = 0;
+    // Not used
+    static volatile uint8_t output_invert_mask = 0x00;
 
-    /* This is VERY simple, just walk the array and wrap when we hit the limit */
-    PORTB = output_invert_mask ^ pgm_read_byte(&Wheels[_current_index].edge_states_ptr[edge_counter]); /* Write it to the port */
-    /* Normal direction  overflow handling */
-    if (ROTATION::CLOCKWISE == TriggerPattern::_rotation)
+    // Write trigger data at _current_index to port
+    PORTB = output_invert_mask ^ pgm_read_byte(&Wheels[pattern_index].edge_states_ptr[edge_counter]);
+
+    // Overflow handling of edge_counter index, based on the direction of rotation
+    if (ROTATION_DIRECTION::CLOCKWISE == rotation_direction)
     {
         edge_counter++;
-        if (edge_counter == Wheels[_current_index].wheel_max_edges)
+        if (edge_counter == Wheels[pattern_index].wheel_max_edges)
         {
             edge_counter = 0;
         }
     }
     else
     {
-        if (edge_counter == 0) 
+        if (edge_counter == 0)
         {
-            edge_counter = Wheels[_current_index].wheel_max_edges;
+            edge_counter = Wheels[pattern_index].wheel_max_edges;
         }
         edge_counter--;
     }
-    /* The tables are in flash so we need pgm_read_byte() */
 
     /* Reset Prescaler only if flag is set */
     if (reset_prescaler)
@@ -274,7 +437,6 @@ Serial.println(edge_counter);
     // Reset next compare value for RPM changes
     // Apply new "RPM" from Timer2 ISR, i.e. speed up/down the virtual "wheel"
     OCR1A = new_OCR1A;
-
 }
 
 ISR(TIMER1_COMPA_vect)

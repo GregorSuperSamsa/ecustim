@@ -1,7 +1,9 @@
-#ifndef COMMUNICATION_H
-#define COMMUNICATION_H
+#ifndef COMMUNICATHardwareManagerN_H
+#define COMMUNICATHardwareManagerN_H
 
 #include <QObject>
+#include <QQueue>
+#include "Protocol.h"
 #include <Communication/RemoteDeviceItem.h>
 
 class Communication : public QObject
@@ -31,10 +33,15 @@ public:
     // Stop discovering currently available remote devices
     virtual void stopRemoteDeviceDiscovery() = 0;
 
-    // Send raw data to the remote device
+
+public slots:
+    // Send raw data
     virtual void send(const QByteArray& bytes) = 0;
 
 signals:
+    // Raw data received
+    void received(QByteArray bytes);
+
     // Discovery state
     void remoteDeviceDiscovered(QSharedPointer<RemoteDeviceItem>);
     void remoteDeviceDiscoveryFinished();
@@ -43,6 +50,7 @@ signals:
     void remoteDeviceDisconnected(QString connectionInfo);
 
 
+
 };
 
-#endif // COMMUNICATION_H
+#endif // COMMUNICATHardwareManagerN_H
